@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint"
+    ]
+  },
+  "settings": {
+    "eslint.workingDirectories": [
+      "./react",
+      "./vanillajs"
+    ]
+  }
+}
