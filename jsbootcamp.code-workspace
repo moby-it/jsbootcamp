@@ -12,7 +12,8 @@
   "settings": {
     "eslint.workingDirectories": [
       "./react",
-      "./vanillajs"
+      "./vanillajs",
+      "./pokelist"
     ]
   }
 }
