@@ -15,12 +15,14 @@ function App() {
         <div>
           <h2>hello from reducer</h2>
           <AddTask />
-          <ul>
-            {tasks.map(t => <li key={t.id}>{t.text}</li>)}
-          </ul>
-          <ol>
-            <Tasks />
-          </ol>
+          <div className="row">
+            <ul>
+              {tasks.map(t => <li key={t.id}>{t.text}</li>)}
+            </ul>
+            <ol>
+              <Tasks />
+            </ol>
+          </div>
         </div>
       </TasksDispatchContext.Provider >
     </TasksContext.Provider >

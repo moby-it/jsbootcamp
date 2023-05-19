@@ -2,8 +2,8 @@ export function tasksReducer(tasks, action) {
   switch (action.type) {
     case 'added': {
       return [...tasks, {
-        id: action.id,
-        text: action.text,
+        id: action.payload.id,
+        text: action.payload.text,
         done: false
       }];
     }

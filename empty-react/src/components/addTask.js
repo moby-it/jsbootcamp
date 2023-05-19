@@ -6,8 +6,10 @@ export function AddTask() {
   return (<button onClick={() => {
     dispatch({
       type: 'added',
-      id: Math.random() * 100,
-      text: 'Some new task'
+      payload: {
+        id: Math.random() * 100,
+        text: 'Some new task'
+      }
     });
   }}>Add A dummy task</button>);
 }
