@@ -40,7 +40,7 @@ export default function FindPokemon() {
           <div key={pokemon.id}>
            <p>{pokemon.name}</p> 
            <p>{pokemon.id}</p> 
-           {/* <p>{pokemon.types[0].type.name}{pokemon.types[1] && `/${pokemon.types[1].type.name}`}</p>  */}
+           <p>{pokemon.types[0].type.name}{pokemon.types[1] && `/${pokemon.types[1].type.name}`}</p> 
            <img src={pokemon.sprites.front_default}/>
            <button>Catch me</button>
             </div>
