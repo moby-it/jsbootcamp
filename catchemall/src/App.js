@@ -1,20 +1,11 @@
 
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { fetchPokemon } from './fetchPokemon';
-let init = true;
+
 function App() {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if (init) {
-      init = false;
-      fetchPokemon().then(pokelist => {
-        console.log(pokelist);
-        setLoading(false);
-      });
-    }
-  }, []);
-  if (loading) return <h2>Loading...</h2>;
-  return <h2> Pokemon fetched</h2>;
+  const result = useQuery('pokemon', () => fetchPokemon());
+  if (result.isFetching) return <h2>Loading...</h2>;
+  return <h2>{JSON.stringify(result.data)}</h2>;
 }
 
 export default App;
