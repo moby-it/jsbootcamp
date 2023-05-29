@@ -1,10 +1,10 @@
 import { PokemonCaught } from "./PokemonCaught";
 
-export function Footer() {
+export function Footer({pokemonArray}) {
     return (
         <>
             <div className='footer'>
-                <PokemonCaught />
+                <PokemonCaught pokemonArray={pokemonArray} />
             </div>
         </>
     )
