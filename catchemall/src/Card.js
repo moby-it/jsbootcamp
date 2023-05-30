@@ -1,7 +1,7 @@
-export function Card(){
-    return(
+export function Card() {
+    return (
         <>
-        <h2>PokeCard</h2>
+
         </>
     )
 }

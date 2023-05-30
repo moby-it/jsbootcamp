@@ -1,32 +1,57 @@
 import { Banner } from "./banner";
-import  axios from "axios";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-const baseUrl = 'https://pokeapi.co/api/v2/pokemon/' ;
+const baseUrl = 'https://pokeapi.co/api/v2/pokemon/';
 
-const pokemonDisplayed=[];
-
-async function callPokemon(i) {
-     await axios.get(baseUrl+i).then(req=>{
-        const pokemon = {
-            name:req.data.name,
-            no:req.data.id,
-            types:req.data.types.map(type=>type.type.name)
+function generateNumbers() {
+    const numbers = [];
+    while (numbers.length < 5) {
+        const number = Math.floor(Math.random() * 151 + 1)
+        if (numbers.indexOf(number) === -1) {
+            numbers.push(number);
         }
-        pokemonDisplayed.push(pokemon)
+    }
+    return numbers;
+};
+
+export function Game() {
+    const postQuery = useQuery({
+        queryKey: ['pokemon'],
+        queryFn: () => {
+            const pokemonDisplayed = [];
+            const randomNumbers = generateNumbers();
+            randomNumbers.map(number => {
+                axios.get(baseUrl + number).then(res => {
+                    const pokemon = {
+                        name: res.data.name,
+                        no: res.data.id,
+                        types: res.data.types.map(type => type.type.name),
+                        imageUrl: res.data.sprites.front_default
+                    }
+                    pokemonDisplayed.push(pokemon);
+                })
+
+            })
+            return pokemonDisplayed
+        }
     })
-}
-callPokemon(1);
-console.log(pokemonDisplayed,'πινακας');
-console.log(pokemonDisplayed[0]);
+    if (postQuery.isLoading) {
+        return (
+            <>
+                <Banner />
+                <h1>loading!</h1>
+            </>
+        )
+    }
+    if (postQuery.isSuccess) {
+        console.log(postQuery.data)
+        return (
+            <>
+                <Banner />
+                <h1>loaded</h1>
+            </>
+        )
+    }
 
-export function Game(){
-
-    return(
-    <>
-        <Banner/>
-        <>
-        <h1>Poke-app</h1>
-        </>
-    </>
-    )
 }
