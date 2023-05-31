@@ -7,9 +7,11 @@ import {
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css';
-import './styles/reset.css';
+import './styles/typography.css';
+import './styles/pokecard.css';
+import "./styles/button.css";
+const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
