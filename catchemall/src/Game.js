@@ -1,10 +1,13 @@
 import { Banner } from "./banner";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { CardContainer } from "./CardContainer";
+import { Footer } from './Footer'
+import  { HorizontalLine} from './HorizontalLine'
 
 const baseUrl = 'https://pokeapi.co/api/v2/pokemon/';
 
-function generateNumbers() {
+function generateUrls() {
     const numbers = [];
     while (numbers.length < 5) {
         const number = Math.floor(Math.random() * 151 + 1)
@@ -12,46 +15,54 @@ function generateNumbers() {
             numbers.push(number);
         }
     }
-    return numbers;
+    const urls = numbers.map(number => baseUrl + number)
+    return urls
 };
-
+const fetchData = async (url) => {
+    const response = await axios.get(url)
+    return response.data
+}
 export function Game() {
+    const urls = generateUrls();
     const postQuery = useQuery({
         queryKey: ['pokemon'],
-        queryFn: () => {
-            const pokemonDisplayed = [];
-            const randomNumbers = generateNumbers();
-            randomNumbers.map(number => {
-                axios.get(baseUrl + number).then(res => {
-                    const pokemon = {
-                        name: res.data.name,
-                        no: res.data.id,
-                        types: res.data.types.map(type => type.type.name),
-                        imageUrl: res.data.sprites.front_default
-                    }
-                    pokemonDisplayed.push(pokemon);
-                })
-
-            })
-            return pokemonDisplayed
+        queryFn: async () => {
+            const promises = urls.map(url => fetchData(url));
+            const pokeData = await Promise.all(promises);
+            return pokeData;
         }
     })
     if (postQuery.isLoading) {
         return (
             <>
                 <Banner />
-                <h1>loading!</h1>
+                <h1>loading</h1>
             </>
         )
     }
-    if (postQuery.isSuccess) {
-        console.log(postQuery.data)
+    if (postQuery.isFetched) {
+        const displayedPokemon = postQuery.data.map(data => {
+            return {
+                name: data.name,
+                no: data.id,
+                types: data.types.map(type => type.type.name),
+                imgUrl: data.sprites.front_default
+            }
+        })
+
         return (
             <>
                 <Banner />
-                <h1>loaded</h1>
+                <CardContainer displayedPokemon={displayedPokemon} />
+                <HorizontalLine/>
+                <Footer />
             </>
         )
+
     }
+
+
+
+    //     }
 
 }
