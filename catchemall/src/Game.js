@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { CardContainer } from "./CardContainer";
 import { Footer } from './Footer'
 import  { HorizontalLine} from './HorizontalLine'
+import { useState } from "react";
+import { useEffect } from "react";
 
 const baseUrl = 'https://pokeapi.co/api/v2/pokemon/';
 
@@ -20,9 +22,27 @@ function generateUrls() {
 };
 const fetchData = async (url) => {
     const response = await axios.get(url)
-    return response.data
+    return response.data;
 }
 export function Game() {
+const [pokemonCaught,setPokemonCaught]=useState([]);
+
+useEffect(() => {
+    const storedPokemon = localStorage.getItem('pokemonStored');
+    if (storedPokemon) {
+      setPokemonCaught(()=>JSON.parse(storedPokemon));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('pokemonStored',JSON.stringify(pokemonCaught));
+  },[pokemonCaught]);
+
+
+
+function updatePokemonCaught(pokemon){
+    setPokemonCaught([...pokemonCaught,pokemon])
+}
     const urls = generateUrls();
     const postQuery = useQuery({
         queryKey: ['pokemon'],
@@ -53,9 +73,9 @@ export function Game() {
         return (
             <>
                 <Banner />
-                <CardContainer displayedPokemon={displayedPokemon} />
+                <CardContainer displayedPokemon={displayedPokemon} updateFn={updatePokemonCaught} />
                 <HorizontalLine/>
-                <Footer />
+                <Footer pokemonArray={pokemonCaught} />
             </>
         )
 

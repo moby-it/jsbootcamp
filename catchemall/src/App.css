@@ -17,21 +17,39 @@ body {
   flex-direction: column;
   align-items: center;
 }
-
-h1 {
-  font-size: 30px;
+.pokelistCaught {
+  display: flex;
+  justify-content: start;
+  align-content: start;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  font-size: 10px !important;
 }
-
-h2 {
+.pokecardCaught{
+  width: 250px;
+  height: 100px;
+  border: 2px solid red;
+  margin: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction:row;
+  justify-content: start;
+  align-items: center;
+}
+h1 {
   font-size: 25px;
 }
 
-h3 {
+h2 {
   font-size: 20px;
 }
 
+h3 {
+  font-size: 15px;
+}
+
 .banner {
-  width: 700px;
+  width: 600px;
 }
 
 .hr {
