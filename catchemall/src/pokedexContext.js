@@ -23,8 +23,11 @@ function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState([]);
 
   function catchPokemon(pokemon) {
-    if (Math.random() > 0.5) setPokemonCaught([...pokemonCaught, pokemon]);
-    else console.log('failed to catch ', pokemon.name);
+    if (Math.random() > 0.5) {
+      setPokemonCaught([...pokemonCaught, pokemon]);
+      return true;
+    }
+    return false;
   }
   return {
     pokemonCaught,
