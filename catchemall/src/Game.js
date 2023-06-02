@@ -3,7 +3,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { CardContainer } from "./CardContainer";
 import { Footer } from './Footer'
-import  { HorizontalLine} from './HorizontalLine'
+import { HorizontalLine } from './HorizontalLine'
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -20,29 +20,37 @@ function generateUrls() {
     const urls = numbers.map(number => baseUrl + number)
     return urls
 };
+
 const fetchData = async (url) => {
     const response = await axios.get(url)
     return response.data;
 }
 export function Game() {
-const [pokemonCaught,setPokemonCaught]=useState([]);
+    const [pokemonCaught, setPokemonCaught] = useState([]);
 
-useEffect(() => {
-    const storedPokemon = localStorage.getItem('pokemonStored');
-    if (storedPokemon) {
-      setPokemonCaught(()=>JSON.parse(storedPokemon));
+    useEffect(() => {
+        const storedPokemon = JSON.parse(localStorage.getItem('storedPokemon'));
+
+        setPokemonCaught(storedPokemon);
+    }, [])
+
+
+    useEffect(() => {
+        if (pokemonCaught.length>0) {
+            localStorage.setItem('storedPokemon', JSON.stringify(pokemonCaught));
+        }
+      
+    }, [pokemonCaught]);
+    function sortPokemon(a,b){
+        return a.no - b.no;
     }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('pokemonStored',JSON.stringify(pokemonCaught));
-  },[pokemonCaught]);
 
 
-
-function updatePokemonCaught(pokemon){
-    setPokemonCaught([...pokemonCaught,pokemon])
-}
+    function updatePokemonCaught(pokemon) {
+        const newArray = [...pokemonCaught,pokemon];
+        newArray.sort(sortPokemon);
+        setPokemonCaught(newArray);
+    }
     const urls = generateUrls();
     const postQuery = useQuery({
         queryKey: ['pokemon'],
@@ -74,7 +82,7 @@ function updatePokemonCaught(pokemon){
             <>
                 <Banner />
                 <CardContainer displayedPokemon={displayedPokemon} updateFn={updatePokemonCaught} />
-                <HorizontalLine/>
+                <HorizontalLine />
                 <Footer pokemonArray={pokemonCaught} />
             </>
         )
