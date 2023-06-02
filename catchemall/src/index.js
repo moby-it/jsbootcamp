@@ -1,22 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  QueryClient,
-  QueryClientProvider
-} from 'react-query';
 import App from './App';
+import { AppProviders } from './providers';
 import reportWebVitals from './reportWebVitals';
-import './styles/index.css';
-import './styles/typography.css';
-import './styles/pokecard.css';
 import "./styles/button.css";
-const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
+import './styles/index.css';
+import './styles/pokecard.css';
+import './styles/typography.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <AppProviders>
       <App />
-    </QueryClientProvider>
+    </AppProviders>
   </React.StrictMode>
 );
 
