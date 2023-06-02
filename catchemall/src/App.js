@@ -1,8 +1,8 @@
 
 import { useQuery } from 'react-query';
-import PokeCard from './components/pokeCard';
+import PokeCard from './components/PokeCard';
 import { fetchPokemon } from './fetchPokemon';
-
+import { CaughtList } from './components/CaughtList';
 function App() {
   console.log("re run app component");
   const result = useQuery('pokemon', () => fetchPokemon());
@@ -13,6 +13,7 @@ function App() {
     <div className='pokecard-list'>
       {result.data.map(pokemon => <PokeCard key={pokemon.id} {...pokemon} />)}
     </div>
+    <CaughtList />
   </>;
 }
 

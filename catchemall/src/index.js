@@ -5,8 +5,9 @@ import { AppProviders } from './providers';
 import reportWebVitals from './reportWebVitals';
 import "./styles/button.css";
 import './styles/index.css';
-import './styles/pokecard.css';
 import './styles/typography.css';
+import './styles/pokecard.css';
+import "./styles/caughtCard.css";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
