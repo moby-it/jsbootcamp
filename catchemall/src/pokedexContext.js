@@ -14,17 +14,39 @@ import { createContext, useState } from "react";
  * @property {(pokemon:Pokemon)=> void} catchPokemon - A function to catch a pokemon.
  */
 
+
 /**
  * @type {React.Context<PokedexContextValue>}
  */
 export const PokedexContext = createContext(null);
 
+/**
+ * @type {string | null | Pokemon[]}
+ */
+let caughtPokemon = localStorage.getItem('pokedex');
+if (caughtPokemon) {
+  try {
+    caughtPokemon = JSON.parse(caughtPokemon);
+  } catch (e) {
+    console.error("failed to parse pokedex json on local storage", e);
+    caughtPokemon = [];
+  }
+  if (!Array.isArray(caughtPokemon)) {
+    console.error('pokedex on local storage is not an array. Defaulting to empty array');
+    caughtPokemon = [];
+  }
+} else {
+  caughtPokemon = [];
+}
 function usePokedex() {
-  const [pokemonCaught, setPokemonCaught] = useState([]);
+  const [pokemonCaught, setPokemonCaught] = useState(caughtPokemon);
 
   function catchPokemon(pokemon) {
     if (Math.random() > 0.5) {
-      setPokemonCaught([...pokemonCaught, pokemon]);
+      const newPokemonList = pokemonCaught.slice();
+      newPokemonList.push(pokemon);
+      setPokemonCaught(newPokemonList);
+      localStorage.setItem('pokedex', JSON.stringify(newPokemonList));
       return true;
     }
     return false;
