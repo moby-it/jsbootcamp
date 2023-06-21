@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 /**
  * @typedef {Object} Pokemon
@@ -40,7 +40,16 @@ if (caughtPokemon) {
 }
 function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState(caughtPokemon);
-
+  useEffect(() => {
+    const lastPokemonCaught = pokemonCaught[pokemonCaught.length - 1];
+    fetch("http://localhost:4000/catch", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: 'POST',
+      body: JSON.stringify(lastPokemonCaught)
+    }).then(r => console.log(r));
+  }, [pokemonCaught]);
   function catchPokemon(pokemon) {
     if (Math.random() > 0.5) {
       const newPokemonList = pokemonCaught.slice();
