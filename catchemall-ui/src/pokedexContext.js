@@ -1,4 +1,20 @@
 import { createContext, useEffect, useState } from "react";
+import { useMutation } from "react-query";
+
+/**
+ * 
+ * @param {Pokemon} lastPokemonCaught 
+ * @returns 
+ */
+function postPokemonCaught(lastPokemonCaught) {
+  return fetch("http://localhost:4000/catch", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: 'POST',
+    body: JSON.stringify(lastPokemonCaught)
+  }).then(r => console.log(r));
+}
 
 /**
  * @typedef {Object} Pokemon
@@ -40,16 +56,12 @@ if (caughtPokemon) {
 }
 function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState(caughtPokemon);
+  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
   useEffect(() => {
     const lastPokemonCaught = pokemonCaught[pokemonCaught.length - 1];
-    fetch("http://localhost:4000/catch", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: 'POST',
-      body: JSON.stringify(lastPokemonCaught)
-    }).then(r => console.log(r));
-  }, [pokemonCaught]);
+    mutate(lastPokemonCaught);
+  }, [pokemonCaught, mutate]);
+
   function catchPokemon(pokemon) {
     if (Math.random() > 0.5) {
       const newPokemonList = pokemonCaught.slice();

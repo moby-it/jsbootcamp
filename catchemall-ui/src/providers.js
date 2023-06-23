@@ -6,9 +6,9 @@ import { PokedexProvider } from './pokedexContext';
 export function AppProviders({ children }) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
 
-  return <PokedexProvider>
-    <QueryClientProvider client={queryClient}>
+  return <QueryClientProvider client={queryClient}>
+    <PokedexProvider>
       {children}
-    </QueryClientProvider>
-  </PokedexProvider>;
+    </PokedexProvider >
+  </QueryClientProvider>;
 }
