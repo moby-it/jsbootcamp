@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 /**
  * 
@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
  * @returns 
  */
 function postPokemonCaught(lastPokemonCaught) {
-  return fetch("http://localhost:4000/catch", {
+  return fetch("http://localhost:4000/pokemon/catch", {
     headers: {
       "Content-Type": "application/json",
     },
@@ -36,30 +36,22 @@ function postPokemonCaught(lastPokemonCaught) {
  */
 export const PokedexContext = createContext(null);
 
-/**
- * @type {string | null | Pokemon[]}
- */
-let caughtPokemon = localStorage.getItem('pokedex');
-if (caughtPokemon) {
-  try {
-    caughtPokemon = JSON.parse(caughtPokemon);
-  } catch (e) {
-    console.error("failed to parse pokedex json on local storage", e);
-    caughtPokemon = [];
-  }
-  if (!Array.isArray(caughtPokemon)) {
-    console.error('pokedex on local storage is not an array. Defaulting to empty array');
-    caughtPokemon = [];
-  }
-} else {
-  caughtPokemon = [];
-}
 function usePokedex() {
-  const [pokemonCaught, setPokemonCaught] = useState(caughtPokemon);
+  const { data } = useQuery('pokemonCaught', () => {
+    return fetch("http://localhost:4000/pokemon/caught").then(r => r.json());
+  });
+  useEffect(() => {
+    if (data) {
+      setPokemonCaught(data);
+    }
+  }, [data]);
+  const [pokemonCaught, setPokemonCaught] = useState([]);
   const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
   useEffect(() => {
     const lastPokemonCaught = pokemonCaught[pokemonCaught.length - 1];
-    mutate(lastPokemonCaught);
+    if (lastPokemonCaught) {
+      mutate(lastPokemonCaught);
+    }
   }, [pokemonCaught, mutate]);
 
   function catchPokemon(pokemon) {
@@ -67,7 +59,6 @@ function usePokedex() {
       const newPokemonList = pokemonCaught.slice();
       newPokemonList.push(pokemon);
       setPokemonCaught(newPokemonList);
-      localStorage.setItem('pokedex', JSON.stringify(newPokemonList));
       return true;
     }
     return false;
