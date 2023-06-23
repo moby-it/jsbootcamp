@@ -14,6 +14,10 @@ function App() {
       {result.data.map(pokemon => <PokeCard key={pokemon.id} {...pokemon} />)}
     </div>
     <CaughtList />
+
+
+
+  
   </>;
 }
 
