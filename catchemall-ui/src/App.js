@@ -13,11 +13,7 @@ function App() {
     <div className='pokecard-list'>
       {result.data.map(pokemon => <PokeCard key={pokemon.id} {...pokemon} />)}
     </div>
-    <CaughtList />
-
-
-
-  
+    <CaughtList />  
   </>;
 }
 
