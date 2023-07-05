@@ -1,13 +1,16 @@
 import { createContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 
+// const apiUrl = "http://localhost:4000";
+const apiUrl = "";
+
 /**
  * 
  * @param {Pokemon} lastPokemonCaught 
  * @returns 
  */
 function postPokemonCaught(lastPokemonCaught) {
-  return fetch("http://localhost:4000/pokemon/catch", {
+  return fetch(apiUrl + "/pokemon/catch", {
     headers: {
       "Content-Type": "application/json",
     },
@@ -38,7 +41,7 @@ export const PokedexContext = createContext(null);
 
 function usePokedex() {
   const { data } = useQuery('pokemonCaught', () => {
-    return fetch("http://localhost:4000/pokemon/caught").then(r => r.json());
+    return fetch(apiUrl + "/pokemon/caught").then(r => r.json());
   });
   useEffect(() => {
     if (data) {

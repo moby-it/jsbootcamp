@@ -10,7 +10,7 @@ function App() {
   if (result.error) return <h2>Error</h2>;
   return <>
     <h1>PokeList</h1>
-    <div className='pokecard-list'>
+    <div className='pokecard-list' data-testid="pokercard-list">
       {result.data.map(pokemon => <PokeCard key={pokemon.id} {...pokemon} />)}
     </div>
     <CaughtList />
