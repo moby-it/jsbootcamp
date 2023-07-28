@@ -1,20 +1,21 @@
 import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
 import { pokedexRouter } from './pokemon.js';
+import { registerMiddleware } from './middleware.js';
+import { authRouter } from './auth.js';
+
 const app = express();
 const port = 4000;
 
-app.use(cors());
-app.use(bodyParser.json({ type: 'application/json' }));
-
-
+registerMiddleware(app);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// Routes
 app.use("/pokemon", pokedexRouter);
+app.use("/auth", authRouter);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
