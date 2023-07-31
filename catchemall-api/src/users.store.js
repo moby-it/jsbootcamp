@@ -2,7 +2,7 @@ import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 
 /**
- * @typedef {User}
+ * @typedef {Object} User
  * @property {string} username 
  * @property {string} hash 
  * @property {string} salt 
@@ -35,7 +35,7 @@ export function getUsers() {
 /**
  * 
  * @param {string} username 
- * @returns {User}
+ * @returns {User | undefined}
  */
 export function getUserByUsername(username) {
   return users.find(u => u.username === username);
@@ -49,7 +49,7 @@ export function getUserByUsername(username) {
 export function getTokenForUser(user) {
   const secret = process.env['JWT_SECRET_KEY'];
   if (!secret) throw new Error("no env secret provided. Application shutting down...");
-  return jwt.sign({ username: user.username, fasolakia: 58 }, secret);
+  return jwt.sign({ username: user.username }, secret);
 }
 // export function getCurrentUser(id) {
 // users.find etc etc
@@ -60,11 +60,10 @@ export function getTokenForUser(user) {
  * 
  * @param {string} username 
  * @param {string} password 
- * @returns {Promise<boolean>}
+ * @returns {Promise<User | null>}
  */
 export async function verifyUser(username, password) {
   const user = getUserByUsername(username);
-  if (!user) return false;
-  const res = await compare(password, user.hash);
-  return res;
+  if (!user) return null;
+  return await compare(password, user.hash) ? user : null;
 }

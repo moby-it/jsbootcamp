@@ -11,9 +11,12 @@
   },
   "settings": {
     "eslint.workingDirectories": [
-      "./react",
+      "./empty-react",
+      "./learn-react",
       "./vanillajs",
-      "./pokelist"
+      "./node",
+      "./catchemall-api",
+      "./catchemall-ui"
     ]
   }
 }
