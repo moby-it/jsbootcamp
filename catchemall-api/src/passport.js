@@ -1,15 +1,13 @@
 import { Strategy } from 'passport-local';
+import { getTokenForUser, verifyUser } from './users.store.js';
 import passport from 'passport';
 
 export function registerPassportMw() {
   passport.use(new Strategy(
-    function (username, password, done) {
-      const verified = verifyUser(username);
+    async function (username, password, done) {
+      const verified = await verifyUser(username, password);
       if (!verified) return done(new Error("not verified"));
-      return done(null, { username: "george", surname: "spanos" });
+      return done(null, getTokenForUser(username));
     }
   ));
-}
-function verifyUser(username) {
-  return username === "george";
 }

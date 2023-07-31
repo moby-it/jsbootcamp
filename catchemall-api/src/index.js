@@ -2,6 +2,9 @@ import express from 'express';
 import { pokedexRouter } from './pokemon.js';
 import { registerMiddleware } from './middleware.js';
 import { authRouter } from './auth.js';
+import { configDotenv } from 'dotenv';
+
+configDotenv();
 
 const app = express();
 const port = 4000;

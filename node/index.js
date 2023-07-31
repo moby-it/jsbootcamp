@@ -16,6 +16,7 @@ function calcAverage(input) {
 }
 let k = averageData;
 
+
 console.log(calcAverage(5));
 
 function filterArray(arr, filterFn) {
