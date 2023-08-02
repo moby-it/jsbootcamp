@@ -6,8 +6,7 @@
     "target": "ESNext",
     "noUnusedLocals": true,
     "noUncheckedIndexedAccess": true,
-    "moduleResolution": "nodenext",
-    "strict": true
+    "moduleResolution": "nodenext"
   },
   "include": [
     "src/**/*"

@@ -1,5 +1,6 @@
 import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getDbClient } from "./db.js";
 
 /**
  * @typedef {Object} User
@@ -9,27 +10,27 @@ import jwt from "jsonwebtoken";
  */
 
 /**
- * @type {User[]}
- */
-const users = [];
-
-/**
  * 
  * @param {User} user 
  */
-export function saveUser(user) {
-  if (users.findIndex(u => u.username === user.username) >= 0) {
-    console.warn(`username ${user.username} already exists`);
-    return;
-  }
-  users.push(user);
+export async function saveUser(user) {
+  const client = getDbClient();
+  const query = `
+  INSERT INTO "users" ("username","password","salt") VALUES ($1, $2, $3)
+  `;
+  await client.query(query, [user.username, user.hash, user.salt]);
 }
 /**
  * 
- * @returns {User[]} 
+ * @returns {Promise<User[]>} 
  */
-export function getUsers() {
-  return users;
+export async function getUsers() {
+  const client = getDbClient();
+
+  /** @type {{rows: User[]}} */
+
+  const res = await client.query(`SELECT *  FROM "users"`);
+  return res.rows;
 }
 
 /**
@@ -38,7 +39,8 @@ export function getUsers() {
  * @returns {User | undefined}
  */
 export function getUserByUsername(username) {
-  return users.find(u => u.username === username);
+  return;
+  // return users.find(u => u.username === username);
 }
 
 /**

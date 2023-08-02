@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:15.3-bookworm
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./ps-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
