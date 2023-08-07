@@ -3,44 +3,88 @@ import jwt from "jsonwebtoken";
 import { getDbClient } from "./db.js";
 
 /**
+ * @typedef Result
+ * @property {string} [error]
+ * @property {any} [data]
+ */
+
+/**
  * @typedef {Object} User
  * @property {string} username 
- * @property {string} hash 
+ * @property {string} password 
  * @property {string} salt 
  */
 
 /**
- * 
+ * @returns {Promise<Result | undefined>}
  * @param {User} user 
  */
 export async function saveUser(user) {
-  const client = getDbClient();
-  const query = `
-  INSERT INTO "users" ("username","password","salt") VALUES ($1, $2, $3)
-  `;
-  await client.query(query, [user.username, user.hash, user.salt]);
+  let client;
+  try {
+    client = await getDbClient();
+    const query = `
+    INSERT INTO "users" ("username","password","salt") VALUES ($1, $2, $3)
+    `;
+    await client.query(query, [user.username, user.password, user.salt]);
+  } catch (e) {
+    return { error: e.detail };
+  } finally {
+    if (client)
+      client.release();
+  }
 }
 /**
  * 
- * @returns {Promise<User[]>} 
+ * @returns {Promise<Result>} 
  */
 export async function getUsers() {
-  const client = getDbClient();
+  let client;
+  try {
+    client = await getDbClient();
 
-  /** @type {{rows: User[]}} */
+    const query = `
+    SELECT *  FROM "users"
+    `;
+    /** @type {{rows: User[]}} */
+    const res = await client.query(query);
+    return { data: res.rows };
 
-  const res = await client.query(`SELECT *  FROM "users"`);
-  return res.rows;
+  } catch (e) {
+    return { error: e.detail };
+  } finally {
+    if (client)
+      client.release();
+  }
 }
 
 /**
  * 
  * @param {string} username 
- * @returns {User | undefined}
+ * @returns {Promise<Result>}
  */
-export function getUserByUsername(username) {
-  return;
-  // return users.find(u => u.username === username);
+export async function getUserByUsername(username) {
+  let client;
+  try {
+    client = await getDbClient();
+
+    const query = `
+    SELECT *  FROM "users"
+    WHERE username = $1
+    `;
+    /** @type {{rows: User[]}} */
+    const res = await client.query(query, [username]);
+    if (res.rows.length === 0) {
+      return { error: 'user not found' };
+    }
+    return { data: res.rows[0] };
+
+  } catch (e) {
+    return { error: e.detail };
+  } finally {
+    if (client)
+      client.release();
+  }
 }
 
 /**
@@ -50,14 +94,9 @@ export function getUserByUsername(username) {
  */
 export function getTokenForUser(user) {
   const secret = process.env['JWT_SECRET_KEY'];
-  if (!secret) throw new Error("no env secret provided. Application shutting down...");
   return jwt.sign({ username: user.username }, secret);
 }
-// export function getCurrentUser(id) {
-// users.find etc etc
-// SELECT * FROM WHERE USER.ID === ID
-// returns a user
-// }
+
 /**
  * 
  * @param {string} username 
@@ -65,7 +104,8 @@ export function getTokenForUser(user) {
  * @returns {Promise<User | null>}
  */
 export async function verifyUser(username, password) {
-  const user = getUserByUsername(username);
+  const res = await getUserByUsername(username);
+  const user = res.data;
   if (!user) return null;
-  return await compare(password, user.hash) ? user : null;
+  return await compare(password, user.password) ? user : null;
 }

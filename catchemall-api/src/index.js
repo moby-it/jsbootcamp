@@ -1,18 +1,21 @@
-import express from 'express';
-import { pokedexRouter } from './pokemon.js';
-import { registerMiddleware } from './middleware.js';
 import { configDotenv } from 'dotenv';
+import express from 'express';
 import { authRouter } from './auth.js';
-import { connectToDb, seedDatabase } from './db.js';
+import { validateConfig } from './config.js';
+import { createDbPool, seedDatabase } from './db.js';
+import { registerMiddleware } from './middleware.js';
+import { pokedexRouter } from './pokemon.js';
 
 configDotenv();
+
+validateConfig();
 
 const app = express();
 const port = 4000;
 
 registerMiddleware(app);
 
-await connectToDb();
+createDbPool()
 await seedDatabase();
 
 app.get('/', (req, res) => {

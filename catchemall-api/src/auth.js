@@ -17,9 +17,13 @@ authRouter.post("/register", async (req, res) => {
   };
   const salt = await bcrypt.genSalt(saltRounds);
   const hash = await bcrypt.hash(password, salt);
-  const user = { username, hash, salt };
-  saveUser(user);
-  const token = getTokenForUser({ username, hash, salt });
+  const user = { username, password: hash, salt };
+  const result = await saveUser(user);
+  if (result?.error) {
+    res.status(500).send(result);
+    return;
+  }
+  const token = getTokenForUser({ username, password, salt });
   return res.send({ token });
 });
 
@@ -28,7 +32,7 @@ authRouter.post("/login", (req, res) => {
   if (!username || !password) return res.sendStatus(400);
   passport.authenticate('local', async (err, token) => {
     if (err) return res.sendStatus(401);
-    return res.send(token);
+    return res.send({ token });
   })(req, res);
 });
 
