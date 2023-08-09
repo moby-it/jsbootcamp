@@ -1,3 +1,4 @@
 node_modules
 pokemonCaught.json
 .env
+coverage
