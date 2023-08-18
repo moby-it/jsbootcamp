@@ -16,5 +16,5 @@ The application should have the following screens:
 1. Register/Login Screen
 2. Catch-some-pokemon Screen
 3. User Profile
-4. User Caught Pokemon
+  - User Caught Pokemon
 5. User List with search functionalities
