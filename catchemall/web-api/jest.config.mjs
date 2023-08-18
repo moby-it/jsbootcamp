@@ -9,6 +9,7 @@ const config = {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: "coverage",
+  verbose: true,
   detectOpenHandles: true,
   transform: {},
 };
