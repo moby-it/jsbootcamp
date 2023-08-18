@@ -23,7 +23,11 @@ import { apiUrl } from "./config";
  */
 export const UserContext = createContext(null);
 
-function useUsersContext() {
+/**
+ * 
+ * @returns {UserContextValue}
+ */
+function useUsers() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [token, setToken] = useState('');
@@ -65,8 +69,8 @@ function useUsersContext() {
 }
 
 export function UserProvider({ children }) {
-  // const { pokemonCaught, catchPokemon } = usePokedex();
-  return <UserProvider.Provider value={null}>
+  const r = useUsers();
+  return <UserContext.Provider value={r}>
     {children}
-  </UserProvider.Provider>;
+  </UserContext.Provider>;
 }
