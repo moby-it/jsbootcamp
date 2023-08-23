@@ -7,4 +7,4 @@ export function CaughtList() {
   return <div className="caught-list">
     {pokemonCaught.map(pokemon => <CaughtCard pokemon={pokemon} key={pokemon.id} />)}
   </div>;
-};;
+}

@@ -5,9 +5,9 @@ import { getDbClient } from "./db.js";
 /**
  * @typedef Result
  * @property {string} [error]
+ * @property {number} [code]
  * @property {any} [data]
  */
-
 /**
  * @typedef {Object} User
  * @property {string} username 
@@ -28,7 +28,10 @@ export async function saveUser(user) {
     `;
     await client.query(query, [user.username, user.password, user.salt]);
   } catch (e) {
-    return { error: e.detail };
+    if (e.code === "23505") {
+      return { error: e.detail, code: 409 };
+    }
+    return { error: e.detail, code: 500 };
   } finally {
     if (client)
       client.release();

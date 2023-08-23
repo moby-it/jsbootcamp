@@ -38,15 +38,23 @@ function useUsers() {
  * @returns {string} user token
  */
   async function register(username, password) {
-    const r = await fetch(`${apiUrl()}/auth/register`, { body: { username, password }, method: 'POST' });
+    const r = await fetch(`${apiUrl()}/auth/register`, {
+      body: JSON.stringify({ username, password }), method: 'POST', headers: {
+        'Content-Type': 'application/json'
+      }
+    });
     const t = await r.json();
     console.log("register:token for user ", username, " is ", t);
   }
   async function login(username, password) {
-    const r = await fetch(`${apiUrl()}/auth/login`, { body: { username, password }, method: 'POST' });
+    const r = await fetch(`${apiUrl()}/auth/login`, {
+      body: JSON.stringify({ username, password }), method: 'POST', headers: {
+        'Content-Type': 'application/json'
+      }
+    });
     const t = await r.json();
     console.log("login:token for user ", username, " is ", t);
-  };
+  }
   /**
    * @returns {Promise<Array<User> | null>}
    */
