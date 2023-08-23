@@ -1,17 +1,8 @@
-# Catchemall React App
+# React + Vite
 
-This is an exercise app to learn some React. We want to create an app in which
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Requirements
+Currently, two official plugins are available:
 
-1. You get 5 random pokemons when landing in.
-2. You have the ability to catch all of them.
-3. In order to catch one pokemon you can just click it.
-4. There should be a chance when you click the to-be-caught pokemon.
-5. There should be an indicator which shows if you succeeded or failed.
-6. Save caught pokemon on Browser Storage (includes some reading).
-7. When I refresh I should see all my previously caught pokemon.
-
-
-On **how to fetch pokemon** read more [here](https://pokeapi.co/docs/v2#pokemon).
-
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
