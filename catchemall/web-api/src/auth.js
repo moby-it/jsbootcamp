@@ -36,6 +36,3 @@ authRouter.post("/login", (req, res) => {
   })(req, res);
 });
 
-authRouter.get('/users', (req, res) => {
-  return res.send(getUsers());
-});

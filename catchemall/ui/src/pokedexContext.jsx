@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { apiUrl } from "./config";
+import { fetchWithAuth } from "./fetchWithAuth";
 
 /**
  * 
@@ -8,7 +9,7 @@ import { apiUrl } from "./config";
  * @returns 
  */
 function postPokemonCaught(lastPokemonCaught) {
-  return fetch(`${apiUrl()}/pokemon/catch`, {
+  return fetchWithAuth(`${apiUrl()}/pokemon/catch`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -39,16 +40,19 @@ export const PokedexContext = createContext(null);
 
 
 function usePokedex() {
+  const [pokemonCaught, setPokemonCaught] = useState([]);
+
   const { data } = useQuery('pokemonCaught', () => {
-    return fetch(`${apiUrl()}/pokemon/caught`).then(r => r.json());
-  });
+    return fetchWithAuth(`${apiUrl()}/pokemon/caught`).then(r => r.json());
+  }, { enabled: false });
+  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
+
   useEffect(() => {
     if (data) {
       setPokemonCaught(data);
     }
   }, [data]);
-  const [pokemonCaught, setPokemonCaught] = useState([]);
-  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
+
   useEffect(() => {
     const lastPokemonCaught = pokemonCaught[pokemonCaught.length - 1];
     if (lastPokemonCaught) {

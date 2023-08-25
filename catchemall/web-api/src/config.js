@@ -18,3 +18,9 @@ export function validateConfig() {
   if (!secret) throw new Error("no env secret provided. Application shutting down...");
   console.log("config is valid");
 }
+
+// this is always present on runtime because JWT_SECRET_KEY has to be present
+// for the app to start.
+export function getJwtSecret() {
+  return process.env['JWT_SECRET_KEY'];
+}

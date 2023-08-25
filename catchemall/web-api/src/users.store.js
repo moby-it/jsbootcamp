@@ -47,7 +47,7 @@ export async function getUsers() {
     client = await getDbClient();
 
     const query = `
-    SELECT *  FROM "users"
+    SELECT * FROM "users"
     `;
     /** @type {{rows: User[]}} */
     const res = await client.query(query);

@@ -5,6 +5,7 @@ import { validateConfig } from './config.js';
 import { createDbPool, seedDatabase } from './db.js';
 import { registerMiddleware } from './middleware.js';
 import { pokedexRouter } from './pokemon.js';
+import { usersRouter } from './users.js';
 
 configDotenv();
 
@@ -15,7 +16,7 @@ const port = 4000;
 
 registerMiddleware(app);
 
-createDbPool()
+createDbPool();
 await seedDatabase();
 
 app.get('/', (req, res) => {
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use("/pokemon", pokedexRouter);
 app.use("/auth", authRouter);
+app.use("/users", usersRouter);
 
 
 app.listen(port, () => {

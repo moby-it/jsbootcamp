@@ -1,6 +1,7 @@
 
 import express from 'express';
 import fs from 'fs';
+import { validateToken } from './auth.middleware.js';
 /**
  * @typedef {Object} Pokemon
  * @property {string} id - Pokemon pokedex id
@@ -15,6 +16,9 @@ import fs from 'fs';
 const pokemonCaught = [];
 
 export const pokedexRouter = express.Router();
+
+pokedexRouter.use(validateToken);
+
 const pokemonCaughtFileName = "pokemonCaught.json";
 pokedexRouter.post("/catch", async (req, res) => {
   const pokemonId = req.body.id;

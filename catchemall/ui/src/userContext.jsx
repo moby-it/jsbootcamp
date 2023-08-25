@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
-
+import { createContext, useEffect, useState } from "react";
+import jwt_decode from 'jwt-decode';
 import { apiUrl } from "./config";
+import { fetchWithAuth } from "./fetchWithAuth";
 
 /**
  * @typedef {Object} User
@@ -31,6 +32,20 @@ function useUsers() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [token, setToken] = useState('');
+
+  useEffect(() => {
+    if (!token) {
+      setCurrentUser(null);
+      setUsers([]);
+      return;
+    }
+    localStorage.setItem('token', token);
+    const user = decodeJwt(token);
+    setCurrentUser(user);
+    fetchUsers().then(({ data }) => {
+      setUsers(data);
+    });
+  }, [token]);
   /**
  * 
  * @param {string} username 
@@ -44,8 +59,8 @@ function useUsers() {
       }
     });
     if (r.ok) {
-      const t = await r.json();
-      console.log("register:token for user ", username, " is ", t);
+      const { token } = await r.json();
+      setToken(token);
     } else {
       return await r.json();
     }
@@ -57,8 +72,8 @@ function useUsers() {
       }
     });
     if (r.ok) {
-      const t = await r.json();
-      console.log("login:token for user ", username, " is ", t);
+      const { token } = await r.json();
+      setToken(token);
     } else {
       return await r.json();
     }
@@ -68,7 +83,7 @@ function useUsers() {
    */
   async function fetchUsers() {
     try {
-      const users = await fetch(`${apiUrl()}/users`).then(r => r.json());
+      const users = await fetchWithAuth(`${apiUrl()}/users`).then(r => r.json());
       return users;
     } catch (e) {
       console.log('failed to fetch users', e);
@@ -89,4 +104,13 @@ export function UserProvider({ children }) {
   return <UserContext.Provider value={r}>
     {children}
   </UserContext.Provider>;
+}
+/**
+ * 
+ * @param {string} jwt 
+ * @returns {User}
+ */
+function decodeJwt(jwt) {
+  const decoded = jwt_decode(jwt);
+  return decoded;
 }
