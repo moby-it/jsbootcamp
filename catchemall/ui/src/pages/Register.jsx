@@ -22,7 +22,9 @@ export function Register() {
         <input type="password" name="password" onKeyUp={(e) => SetPassword(e.target.value)} />
       </div>
       <button className="btn login-btn" type="submit" onClick={submit}>Register</button>
-      <Link to="/login"> {"Already have an account? Login here"}</Link>
+      <div style={{ textAlign: "center" }}>
+        Already have an account?<br /><Link to="/login">Login here</Link>
+      </div>
     </form>
   </Card>;
 }
