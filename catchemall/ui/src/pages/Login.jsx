@@ -19,7 +19,9 @@ export function Login() {
         <input type="password" name="password" onKeyUp={(e) => SetPassword(e.target.value)} />
       </div>
       <button className="btn login-btn" type="submit" onClick={submit}>Login</button>
-      <Link to="/register"> {"Don't have an account? Register here"}</Link>
+      <div>
+        Don't have an account?<Link to="/register"> {" Register here"}</Link>
+      </div>
     </form>
   </Card>;
 }
