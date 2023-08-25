@@ -31,7 +31,7 @@ authRouter.post("/login", (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.sendStatus(400);
   passport.authenticate('local', async (err, token) => {
-    if (err) return res.sendStatus(401);
+    if (err) return res.status(401).send(err);
     return res.send({ token });
   })(req, res);
 });

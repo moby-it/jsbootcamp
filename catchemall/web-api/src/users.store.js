@@ -29,7 +29,7 @@ export async function saveUser(user) {
     await client.query(query, [user.username, user.password, user.salt]);
   } catch (e) {
     if (e.code === "23505") {
-      return { error: e.detail, code: 409 };
+      return { error: "Username already exists", code: 409 };
     }
     return { error: e.detail, code: 500 };
   } finally {
@@ -105,11 +105,11 @@ export function getTokenForUser(user) {
  * 
  * @param {string} username 
  * @param {string} password 
- * @returns {Promise<User | null>}
+ * @returns {Promise<User | string>}
  */
 export async function verifyUser(username, password) {
   const res = await getUserByUsername(username);
   const user = res.data;
-  if (!user) return null;
-  return await compare(password, user.password) ? user : null;
+  if (!user) return 'users does not exists';
+  return await compare(password, user.password) ? user : 'Incorrect Password';
 }

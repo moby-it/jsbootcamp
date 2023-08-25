@@ -43,8 +43,12 @@ function useUsers() {
         'Content-Type': 'application/json'
       }
     });
-    const t = await r.json();
-    console.log("register:token for user ", username, " is ", t);
+    if (r.ok) {
+      const t = await r.json();
+      console.log("register:token for user ", username, " is ", t);
+    } else {
+      return await r.json();
+    }
   }
   async function login(username, password) {
     const r = await fetch(`${apiUrl()}/auth/login`, {
@@ -52,8 +56,12 @@ function useUsers() {
         'Content-Type': 'application/json'
       }
     });
-    const t = await r.json();
-    console.log("login:token for user ", username, " is ", t);
+    if (r.ok) {
+      const t = await r.json();
+      console.log("login:token for user ", username, " is ", t);
+    } else {
+      return await r.json();
+    }
   }
   /**
    * @returns {Promise<Array<User> | null>}

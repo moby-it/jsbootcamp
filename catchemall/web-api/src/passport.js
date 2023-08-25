@@ -5,9 +5,9 @@ import passport from 'passport';
 export function registerPassportMw() {
   passport.use(new Strategy(
     async function (username, password, done) {
-      const user = await verifyUser(username, password);
-      if (!user) return done(new Error("not verified"));
-      return done(null, getTokenForUser(user));
+      const result = await verifyUser(username, password);
+      if (typeof result === 'string') return done({ code: 401, error: result });
+      return done(null, getTokenForUser(result));
     }
   ));
 }

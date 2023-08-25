@@ -8,5 +8,5 @@ COPY . .
 
 EXPOSE 4000
 
-CMD exec npm start
+CMD exec npm run start
 

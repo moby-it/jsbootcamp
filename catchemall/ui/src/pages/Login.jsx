@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Card } from "../components/Card";
 import { Link } from "react-router-dom";
+import { UserContext } from "../userContext";
 export function Login() {
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
-  function submit(e) {
+  const [error, SetError] = useState('');
+  const { login } = useContext(UserContext);
+  async function submit(e) {
+    SetError('');
     e.preventDefault();
-    console.log(username, password);
+    const r = await login(username, password);
+    if (r) SetError(r.error);
   }
   return <Card classes={['mt-2']}>
     <form className="login-form">
@@ -18,8 +23,9 @@ export function Login() {
         <label htmlFor="password">Password</label>
         <input type="password" name="password" onKeyUp={(e) => SetPassword(e.target.value)} />
       </div>
+      {error && <span className="error">{error}</span>}
       <button className="btn login-btn" type="submit" onClick={submit}>Login</button>
-      <div style={{ "text-align": "center" }}>
+      <div style={{ textAlign: "center" }}>
         {"Don't"} have an account?<br /><Link to="/register">Register here</Link>
       </div>
     </form>
