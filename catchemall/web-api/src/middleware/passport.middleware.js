@@ -1,6 +1,7 @@
 import { Strategy } from 'passport-local';
-import { getTokenForUser, verifyUser } from '../db/users.store.js';
+import { verifyUser } from '../db/users.store.js';
 import passport from 'passport';
+import { getTokenForUser } from '../utils/user.utils.js';
 
 export function registerPassportMiddleware() {
   passport.use(new Strategy(

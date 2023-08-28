@@ -24,3 +24,6 @@ export function validateConfig() {
 export function getJwtSecret() {
   return process.env['JWT_SECRET_KEY'];
 }
+export function getTokenExpiresIn() {
+  return process.env['TOKEN_EXPIRES_IN'] || '4h';
+}

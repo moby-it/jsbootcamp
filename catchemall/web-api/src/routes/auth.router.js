@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import express from "express";
 import passport from "passport";
-import { getTokenForUser, saveUser } from "../db/users.store.js";
+import { saveUser } from "../db/users.store.js";
+import { getTokenForUser } from '../utils/user.utils.js';
 export const authRouter = express.Router();
 
 

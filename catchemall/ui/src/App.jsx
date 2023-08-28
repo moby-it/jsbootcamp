@@ -19,19 +19,29 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <UnauthenticatedRoute>
+      <Register />,
+    </UnauthenticatedRoute>,
     errorElement: <ErrorPage />,
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <UnauthenticatedRoute>
+      <Login />,
+    </UnauthenticatedRoute>,
     errorElement: <ErrorPage />,
   },
 ]);
 
 function ProtectedRoute({ children }) {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, isLoading } = useContext(UserContext);
+  if (isLoading) return <span>Loading...</span>;
   if (!currentUser) return <Navigate to="/login" replace />;
+  return children;
+}
+function UnauthenticatedRoute({ children }) {
+  const { currentUser } = useContext(UserContext);
+  if (currentUser) return <Navigate to="/" replace />;
   return children;
 }
 

@@ -1,19 +1,25 @@
 import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
-import { Link } from "react-router-dom";
 import { UserContext } from "../userContext";
+
 export function Register() {
+  const navigate = useNavigate();
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
   const [error, SetError] = useState('');
   const { register } = useContext(UserContext);
+
   async function submit(e) {
     SetError('');
     e.preventDefault();
     console.log(username, password);
     const r = await register(username, password);
-    if (r) SetError(r.error);
+    if (r) { SetError(r.error); } else {
+      navigate('/');
+    }
   }
+
   return <Card classes={['mt-2']}>
     <form className="login-form">
       <div className="form-field">

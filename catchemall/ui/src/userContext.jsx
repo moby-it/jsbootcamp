@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import jwt_decode from 'jwt-decode';
+import { decodeJwt, fetchWithAuth, tokenIsValid } from "./auth.helpers";
 import { apiUrl } from "./config";
-import { fetchWithAuth } from "./fetchWithAuth";
 
 /**
  * @typedef {Object} User
@@ -13,6 +12,8 @@ import { fetchWithAuth } from "./fetchWithAuth";
  * @property {Array<User>} users
  * @property {User} currentUser
  * @property {string} token
+ * @property {boolean} isLoading
+ * @property {()=> Promise<void>} init
  * @property {(username,password)=> Promise<boolean>} register
  * @property {(username,password)=> Promise<boolean>} login
  * 
@@ -24,6 +25,9 @@ import { fetchWithAuth } from "./fetchWithAuth";
  */
 export const UserContext = createContext(null);
 
+
+const localStorageToken = tokenIsValid(localStorage.getItem('token)')) || '';
+
 /**
  * 
  * @returns {UserContextValue}
@@ -31,8 +35,8 @@ export const UserContext = createContext(null);
 function useUsers() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState();
-  const [token, setToken] = useState('');
-
+  const [token, setToken] = useState(localStorageToken);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (!token) {
       setCurrentUser(null);
@@ -40,10 +44,11 @@ function useUsers() {
       return;
     }
     localStorage.setItem('token', token);
-    const user = decodeJwt(token);
-    setCurrentUser(user);
-    fetchUsers().then(({ data }) => {
-      setUsers(data);
+    fetchUsers().then(users => {
+      const user = decodeJwt(token);
+      setCurrentUser(user);
+      setUsers(users);
+      setIsLoading(false);
     });
   }, [token]);
   /**
@@ -60,6 +65,7 @@ function useUsers() {
     });
     if (r.ok) {
       const { token } = await r.json();
+      setIsLoading(true);
       setToken(token);
     } else {
       return await r.json();
@@ -73,6 +79,7 @@ function useUsers() {
     });
     if (r.ok) {
       const { token } = await r.json();
+      setIsLoading(true);
       setToken(token);
     } else {
       return await r.json();
@@ -90,10 +97,21 @@ function useUsers() {
       return null;
     }
   }
+
+  async function init() {
+    const users = await fetchUsers();
+    const user = decodeJwt(localStorageToken);
+    setCurrentUser(user);
+    setUsers(users);
+    setIsLoading(false);
+  }
+
   return {
     users,
     currentUser,
     token,
+    isLoading,
+    init,
     register,
     login,
   };
@@ -104,13 +122,4 @@ export function UserProvider({ children }) {
   return <UserContext.Provider value={r}>
     {children}
   </UserContext.Provider>;
-}
-/**
- * 
- * @param {string} jwt 
- * @returns {User}
- */
-function decodeJwt(jwt) {
-  const decoded = jwt_decode(jwt);
-  return decoded;
 }

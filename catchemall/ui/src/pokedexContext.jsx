@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { apiUrl } from "./config";
-import { fetchWithAuth } from "./fetchWithAuth";
+import { fetchWithAuth } from "./auth.helpers";
 
 /**
  * 

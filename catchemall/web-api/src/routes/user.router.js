@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers } from "../users.store.js";
+import { getUsers } from "../db/users.store.js";
 import { validateToken } from "../middleware/auth.middleware.js";
 
 export const userRouter = express.Router();
