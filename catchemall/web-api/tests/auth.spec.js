@@ -1,7 +1,7 @@
 import express from "express";
 import request from "supertest";
-import { registerMiddleware } from "../middleware.js";
-import { authRouter } from "../auth.js";
+import { registerMiddleware } from "../src/middleware/index.js";
+import { authRouter } from "../src/routes/auth.router.js";
 
 describe('Auth Router Test', () => {
   let app;

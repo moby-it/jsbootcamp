@@ -1,8 +1,8 @@
 import { Strategy } from 'passport-local';
-import { getTokenForUser, verifyUser } from './users.store.js';
+import { getTokenForUser, verifyUser } from '../db/users.store.js';
 import passport from 'passport';
 
-export function registerPassportMw() {
+export function registerPassportMiddleware() {
   passport.use(new Strategy(
     async function (username, password, done) {
       const result = await verifyUser(username, password);

@@ -1,7 +1,7 @@
 
 import express from 'express';
 import fs from 'fs';
-import { validateToken } from './auth.middleware.js';
+import { validateToken } from '../middleware/auth.middleware.js';
 /**
  * @typedef {Object} Pokemon
  * @property {string} id - Pokemon pokedex id

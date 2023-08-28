@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { getJwtSecret } from "./config.js";
+import { getJwtSecret } from "../config.js";
 
 /**
  * 

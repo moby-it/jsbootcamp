@@ -1,4 +1,4 @@
-import { getTokenForUser } from "../users.store.js";
+import { getTokenForUser } from "../src/db/users.store.js";
 
 describe('Get Token For User', () => {
   it('should throw an error when a user with no username is passed', () => {
