@@ -7,10 +7,10 @@ function PokeCard({ id, name, types, imageUrl }) {
   let wrapperClass = "pokecard";
   if (caught) wrapperClass += " caught";
   const { catchPokemon } = useContext(PokedexContext);
-  function onCatchPokemon({ id, name, types, imageUrl }) {
+  async function onCatchPokemon({ id, name, types, imageUrl }) {
     if (!clicked) {
       setClicked(true);
-      const caught = catchPokemon({ id, name, types, imageUrl });
+      const caught = await catchPokemon({ id, name, types, imageUrl });
       setCaught(caught);
     }
   }

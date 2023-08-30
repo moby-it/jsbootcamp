@@ -23,15 +23,9 @@ const pokemonCaughtFileName = "pokemonCaught.json";
 pokedexRouter.post("/catch", async (req, res) => {
   const pokemonId = req.body.id;
   if (pokemonId) {
-    if (!pokemonCaught.map(p => p.id).includes(pokemonId)) {
-      pokemonCaught.push(req.body);
-      await savePokemon(req.body);
-      res.send(JSON.stringify(req.body));
-    } else {
-      console.warn(`WARNING: duplicate pokemon send. ${req.body.name} is already caught.`);
-      res.sendStatus(409);
-
-    }
+    pokemonCaught.push(req.body);
+    await savePokemon(req.body);
+    res.send(JSON.stringify(req.body));
   }
 });
 pokedexRouter.get("/caught", (req, res) => {

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
@@ -30,7 +30,7 @@ function postPokemonCaught(lastPokemonCaught) {
  * @typedef {Object} PokedexContextValue
  * @property {Array<Pokemon>} pokemonCaught - An array of caught pokemons.
  * @property {(Array<Pokemon>)=>void} setPokemonCaught
- * @property {(pokemon:Pokemon)=> void} catchPokemon - A function to catch a pokemon.
+ * @property {(pokemon:Pokemon)=> Promise<void>} catchPokemon - A function to catch a pokemon.
  */
 
 /**
@@ -44,20 +44,15 @@ function usePokedex() {
     return fetchWithAuth(`${apiUrl()}/pokemon/caught`).then(r => r.json());
   }, { enabled: false });
 
-  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
+  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
+    () => setPokemonCaught([...pokemonCaught, pokemon])
+  ));
 
-  useEffect(() => {
-    const lastPokemonCaught = pokemonCaught[pokemonCaught.length - 1];
-    if (lastPokemonCaught) {
-      mutate(lastPokemonCaught);
-    }
-  }, [pokemonCaught, mutate]);
-
-  function catchPokemon(pokemon) {
+  async function catchPokemon(pokemon) {
     if (Math.random() > 0.5) {
       const newPokemonList = pokemonCaught.slice();
       newPokemonList.push(pokemon);
-      setPokemonCaught(newPokemonList);
+      mutate(pokemon);
       return true;
     }
     return false;
