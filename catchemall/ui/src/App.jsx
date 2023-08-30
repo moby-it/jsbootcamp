@@ -8,8 +8,8 @@ import { Register } from './pages/Register';
 import { Login } from './pages/Login';
 import { ErrorPage } from './pages/ErrorPage';
 import { useContext, useEffect } from "react";
-import { UserContext } from './userContext';
-import { tokenIsValid } from "./auth.helpers";
+import { UserContext } from './context/userContext';
+import { tokenIsValid } from "./utils/auth.helpers";
 const router = createBrowserRouter([
   {
     path: "/",

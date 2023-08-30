@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PokedexContext } from "../pokedexContext";
+import { PokedexContext } from "../context/pokedexContext";
 import { CaughtCard } from "./CaughtCard";
 
 export function CaughtList() {

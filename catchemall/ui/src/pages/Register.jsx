@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
-import { UserContext } from "../userContext";
+import { UserContext } from "../context/userContext";
 
 export function Register() {
   const navigate = useNavigate();

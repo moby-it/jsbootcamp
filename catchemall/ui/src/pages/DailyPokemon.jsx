@@ -1,7 +1,7 @@
 
 import { useQuery } from 'react-query';
 import PokeCard from '../components/PokeCard';
-import { fetchPokemon } from '../fetchPokemon';
+import { fetchPokemon } from '../utils/fetchPokemon';
 import { CaughtList } from '../components/CaughtList';
 
 export function DailyPokemon() {

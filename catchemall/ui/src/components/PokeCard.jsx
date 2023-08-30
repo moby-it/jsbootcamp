@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { PokedexContext } from "../pokedexContext";
+import { PokedexContext } from "../context/pokedexContext";
 import { CaughtIcon } from './CaughtIcon';
 function PokeCard({ id, name, types, imageUrl }) {
   const [clicked, setClicked] = useState(false);

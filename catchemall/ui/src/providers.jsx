@@ -2,8 +2,8 @@ import {
   QueryClient,
   QueryClientProvider
 } from 'react-query';
-import { PokedexProvider } from './pokedexContext';
-import { UserProvider } from './userContext';
+import { PokedexProvider } from './context/pokedexContext';
+import { UserProvider } from './context/userContext';
 
 export function AppProviders({ children }) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false, enabled: false } } });

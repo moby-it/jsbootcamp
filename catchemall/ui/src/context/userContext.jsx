@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { decodeJwt, fetchWithAuth } from "./auth.helpers";
-import { apiUrl } from "./config";
+import { decodeJwt, fetchWithAuth } from "../utils/auth.helpers";
+import { apiUrl } from "../utils/config";
 import { PokedexContext } from "./pokedexContext";
 import { useQuery } from "react-query";
 /**
