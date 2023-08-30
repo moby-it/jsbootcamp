@@ -25,13 +25,12 @@ export function fetchWithAuth(url, options = {}) {
  * @returns {boolean}
  */
 export function tokenIsValid(token) {
-  if (!token) return false;
   const decoded = decodeJwt(token);
   if (!decoded.exp) return false;
   if (decoded.exp < (new Date().getTime() + 1) / 1000) {
     return false;
   }
-  return token;
+  return true;
 }
 
 /**

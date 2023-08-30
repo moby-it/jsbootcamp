@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { apiUrl } from "./config";
 import { fetchWithAuth } from "./auth.helpers";
+import { apiUrl } from "./config";
 
 /**
  * 
@@ -29,29 +29,22 @@ function postPokemonCaught(lastPokemonCaught) {
 /**
  * @typedef {Object} PokedexContextValue
  * @property {Array<Pokemon>} pokemonCaught - An array of caught pokemons.
+ * @property {(Array<Pokemon>)=>void} setPokemonCaught
  * @property {(pokemon:Pokemon)=> void} catchPokemon - A function to catch a pokemon.
  */
-
 
 /**
  * @type {React.Context<PokedexContextValue>}
  */
 export const PokedexContext = createContext(null);
 
-
 function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState([]);
-
-  const { data } = useQuery('pokemonCaught', () => {
+  const pokemonCaughtQuery = useQuery('pokemonCaught', () => {
     return fetchWithAuth(`${apiUrl()}/pokemon/caught`).then(r => r.json());
   }, { enabled: false });
-  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
 
-  useEffect(() => {
-    if (data) {
-      setPokemonCaught(data);
-    }
-  }, [data]);
+  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon));
 
   useEffect(() => {
     const lastPokemonCaught = pokemonCaught[pokemonCaught.length - 1];
@@ -71,12 +64,14 @@ function usePokedex() {
   }
   return {
     pokemonCaught,
-    catchPokemon
+    fetchPokemonCaught: pokemonCaughtQuery.refetch,
+    catchPokemon,
+    setPokemonCaught
   };
 }
 export function PokedexProvider({ children }) {
-  const { pokemonCaught, catchPokemon } = usePokedex();
-  return <PokedexContext.Provider value={{ pokemonCaught, catchPokemon }}>
+  const ctxValue = usePokedex();
+  return <PokedexContext.Provider value={ctxValue}>
     {children}
   </PokedexContext.Provider>;
 }

@@ -1,14 +1,15 @@
 
 
 import {
-  createBrowserRouter, RouterProvider, Navigate
+  createBrowserRouter, RouterProvider, Navigate, useNavigate
 } from "react-router-dom";
 import { DailyPokemon } from './pages/DailyPokemon';
 import { Register } from './pages/Register';
 import { Login } from './pages/Login';
 import { ErrorPage } from './pages/ErrorPage';
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from './userContext';
+import { tokenIsValid } from "./auth.helpers";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,8 +41,16 @@ function ProtectedRoute({ children }) {
   return children;
 }
 function UnauthenticatedRoute({ children }) {
-  const { currentUser } = useContext(UserContext);
-  if (currentUser) return <Navigate to="/" replace />;
+  const { setToken, isLoading, setIsLoading, currentUser } = useContext(UserContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!currentUser && !isLoading && token && tokenIsValid(token)) {
+      setIsLoading(true);
+      setToken(token);
+    }
+    if (currentUser) navigate("/");
+  }, [currentUser, isLoading, navigate, setIsLoading, setToken]);
   return children;
 }
 
