@@ -15,6 +15,12 @@ export function fetchWithAuth(url, options = {}) {
       Authorization: `Bearer ${token}`,
       ...options.headers
     },
+  }).then(r => {
+    if (r.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = window.origin + '/login';
+    }
+    return r;
   });
 }
 

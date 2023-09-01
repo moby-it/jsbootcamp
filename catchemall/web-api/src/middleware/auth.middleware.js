@@ -12,8 +12,11 @@ export function validateToken(req, res, next) {
   if (!authHeader) return res.sendStatus(401);
   const token = authHeader.split(' ')[1];
   if (!token) return res.sendStatus(401);
-  const user = jwt.verify(token, getJwtSecret());
-  if(!user) return res.sendStatus(401)
-  console.log(user);
+  let user;
+  try {
+    user = jwt.verify(token, getJwtSecret());
+  } catch (e) {
+    return res.sendStatus(401);
+  }
   next();
 }

@@ -15,7 +15,7 @@ function postPokemonCaught(lastPokemonCaught) {
     },
     method: 'POST',
     body: JSON.stringify(lastPokemonCaught)
-  }).then(r => console.log(r));
+  });
 }
 
 /**
