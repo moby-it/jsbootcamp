@@ -9,6 +9,7 @@ import './styles/typography.css';
 import './styles/pokecard.css';
 import "./styles/caughtCard.css";
 import "./styles/card.css";
+import "./styles/layout.css";
 // Page styles
 import "./styles/pages/login.css";
 

@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { decodeJwt, fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
 import { PokedexContext } from "./pokedexContext";
-import { useQuery } from "react-query";
 /**
  * @typedef {Object} User
  * @property {string} username
@@ -19,6 +19,7 @@ import { useQuery } from "react-query";
  * @property {(string)=> void} setToken
  * @property {(username,password)=> Promise<boolean>} register
  * @property {(username,password)=> Promise<boolean>} login
+ * @property {()=> void} logout
  * 
  */
 
@@ -88,6 +89,13 @@ function useUsers() {
       return await r.json();
     }
   }
+
+  function logout() {
+    localStorage.removeItem('token');
+    setCurrentUser();
+    setUsers([]);
+    setToken();
+  }
   const fetchUsersQuery = useQuery('fetchUsers', () => fetchUsers(), { enabled: false });
 
   return {
@@ -99,6 +107,7 @@ function useUsers() {
     setToken,
     register,
     login,
+    logout
   };
 }
 
