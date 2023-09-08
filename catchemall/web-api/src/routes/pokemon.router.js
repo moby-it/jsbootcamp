@@ -15,12 +15,12 @@ import { validateToken } from '../middleware/auth.middleware.js';
  */
 const pokemonCaught = [];
 
-export const pokedexRouter = express.Router();
+export const pokemonRouter = express.Router();
 
-pokedexRouter.use(validateToken);
+pokemonRouter.use(validateToken);
 
 const pokemonCaughtFileName = "pokemonCaught.json";
-pokedexRouter.post("/catch", async (req, res) => {
+pokemonRouter.post("/catch", async (req, res) => {
   const pokemonId = req.body.id;
   if (pokemonId) {
     pokemonCaught.push(req.body);
@@ -28,7 +28,7 @@ pokedexRouter.post("/catch", async (req, res) => {
     res.send(JSON.stringify(req.body));
   }
 });
-pokedexRouter.get("/caught", (req, res) => {
+pokemonRouter.get("/caught", (req, res) => {
   res.json(pokemonCaught);
 });
 async function savePokemon(pokemon) {

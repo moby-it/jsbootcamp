@@ -4,7 +4,7 @@ import { authRouter } from './routes/auth.router.js';
 import { validateConfig } from './config.js';
 import { createDbPool, seedDatabase } from './db/db.js';
 import { registerMiddleware } from './middleware/index.js';
-import { pokedexRouter } from './routes/pokemon.router.js';
+import { pokemonRouter } from './routes/pokemon.router.js';
 import { userRouter } from './routes/user.router.js';
 
 configDotenv();
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use("/pokemon", pokedexRouter);
+app.use("/pokemon", pokemonRouter);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 
