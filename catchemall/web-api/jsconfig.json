@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/jsconfig",
   "compilerOptions": {
     "checkJs": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "target": "ESNext",
     "noUnusedLocals": true,
     "noUncheckedIndexedAccess": true,

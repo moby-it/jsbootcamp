@@ -1,13 +1,7 @@
 import pg from 'pg';
+import { UserPokemonCreateQuery, UsersTableCreateQuery } from './queries.js';
 
-const InitializeUsersTable = `
-create table if not exists Users (
-  ID SERIAL PRIMARY KEY ,
-  Username varchar(50) NOT NULL UNIQUE ,
-  Password varchar(255) NOT NULL ,
-  Salt varchar(50) NOT NULL
-)
-`;
+
 
 /**
  * @type {pg.Pool}
@@ -23,7 +17,8 @@ export async function createDbPool() {
 }
 export async function seedDatabase() {
   const client = await pool.connect();
-  await client.query(InitializeUsersTable);
+  await client.query(UsersTableCreateQuery);
+  await client.query(UserPokemonCreateQuery);
 }
 
 export async function getDbClient() {
