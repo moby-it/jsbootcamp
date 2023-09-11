@@ -1,7 +1,19 @@
 import pg from 'pg';
-import { UserPokemonCreateQuery, UsersTableCreateQuery } from './queries.js';
+import { readFileSync, readdir, readdirSync } from 'fs';
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+
+const __dirname = path.dirname(__filename);
 
 
+/**
+ * @typedef Result
+ * @property {string} [error]
+ * @property {number} [code]
+ * @property {any} [data]
+ */
 
 /**
  * @type {pg.Pool}
@@ -17,8 +29,12 @@ export async function createDbPool() {
 }
 export async function seedDatabase() {
   const client = await pool.connect();
-  await client.query(UsersTableCreateQuery);
-  await client.query(UserPokemonCreateQuery);
+  const filenames = readdirSync(__dirname + '/migrations', 'utf-8');
+  if (filenames.length <= 0) throw new Error("there no init db file");
+  for (const filename of filenames) {
+    const query = readFileSync(`${__dirname}/migrations/${filename}`, 'utf-8');
+    await client.query(query);
+  }
 }
 
 export async function getDbClient() {

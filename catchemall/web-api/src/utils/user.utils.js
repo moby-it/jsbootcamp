@@ -11,3 +11,4 @@ export function getTokenForUser(user) {
   const secret = process.env['JWT_SECRET_KEY'];
   return jwt.sign({ username: user.username }, secret, { expiresIn: getTokenExpiresIn(), });
 }
+

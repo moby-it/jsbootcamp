@@ -1,21 +1,18 @@
 import { compare } from "bcrypt";
 import { getDbClient } from "./db.js";
 
-/**
- * @typedef Result
- * @property {string} [error]
- * @property {number} [code]
- * @property {any} [data]
- */
+const TABLE_NAME = "user";
+
 /**
  * @typedef {Object} User
+ * @property {number} ID
  * @property {string} username 
  * @property {string} password 
  * @property {string} salt 
  */
 
 /**
- * @returns {Promise<Result | undefined>}
+ * @returns {Promise<import("./db.js").Result | undefined>}
  * @param {User} user 
  */
 export async function saveUser(user) {
@@ -23,7 +20,7 @@ export async function saveUser(user) {
   try {
     client = await getDbClient();
     const query = `
-    INSERT INTO "users" ("username","password","salt") VALUES ($1, $2, $3)
+    INSERT INTO "${TABLE_NAME}" ("username","password","salt") VALUES ($1, $2, $3)
     `;
     await client.query(query, [user.username, user.password, user.salt]);
   } catch (e) {
@@ -38,7 +35,7 @@ export async function saveUser(user) {
 }
 /**
  * 
- * @returns {Promise<Result>} 
+ * @returns {Promise<import("./db.js").Result>} 
  */
 export async function getUsers() {
   let client;
@@ -46,7 +43,7 @@ export async function getUsers() {
     client = await getDbClient();
 
     const query = `
-    SELECT * FROM "users"
+    SELECT * FROM "user"
     `;
     /** @type {{rows: User[]}} */
     const res = await client.query(query);
@@ -63,7 +60,7 @@ export async function getUsers() {
 /**
  * 
  * @param {string} username 
- * @returns {Promise<Result>}
+ * @returns {Promise<import("./db.js").Result>}
  */
 export async function getUserByUsername(username) {
   let client;
@@ -71,7 +68,7 @@ export async function getUserByUsername(username) {
     client = await getDbClient();
 
     const query = `
-    SELECT *  FROM "users"
+    SELECT *  FROM "${TABLE_NAME}"
     WHERE username = $1
     `;
     /** @type {{rows: User[]}} */
@@ -88,7 +85,6 @@ export async function getUserByUsername(username) {
       client.release();
   }
 }
-
 
 /**
  * 

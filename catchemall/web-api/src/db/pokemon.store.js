@@ -1,1 +1,0 @@
-// implement sql queries that relate to pokemon table
