@@ -1,5 +1,5 @@
 import pg from 'pg';
-import { readFileSync, readdir, readdirSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,8 +10,8 @@ const __dirname = path.dirname(__filename);
 
 /**
  * @typedef Result
- * @property {string} [error]
- * @property {number} [code]
+ * @property {any} [error]
+ * @property {string | number} [code]
  * @property {any} [data]
  */
 
@@ -41,4 +41,23 @@ export async function getDbClient() {
   const client = await pool.connect();
   if (!client) throw new Error("client is not connected to db");
   return client;
+}
+/**
+ * 
+ * @param {string} query 
+ * @param {unknown[]} args
+ * @returns {Promise<Result>}
+ */
+export async function runQuery(query, args) {
+  let client;
+  try {
+    client = await getDbClient();
+    const res = await client.query(query, args);
+    return { data: res };
+  } catch (e) {
+    return { error: e, code: 500 };
+  } finally {
+    if (client)
+      client.release();
+  }
 }

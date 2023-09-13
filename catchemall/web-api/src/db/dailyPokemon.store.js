@@ -1,13 +1,7 @@
-import { getDbClient } from "./db.js";
+import { runQuery } from "./db.js";
 
 const TABLE_NAME = "daily_pokemon";
 
-/**
- * @typedef Result
- * @property {string} [error]
- * @property {number} [code]
- * @property {any} [data]
- */
 /**
  * @typedef {Object} DailyPokemon
  * @property {number} ID 
@@ -18,27 +12,18 @@ const TABLE_NAME = "daily_pokemon";
 // verify if a user already has daily pokemon
 /**
  * 
- * @param {import("./users.store.js").User} user 
- * @returns {Promise<Result>}
+ * @param {number} userId
+ * @returns {Promise<import("./db.js").Result>}
  */
-export async function hasDailyPokemon(user) {
-  let client;
-  try {
-    client = await getDbClient();
-    const query = `
-    SELECT count(*) from ${TABLE_NAME} WHERE user_id = $1;
-    `;
-    const res = await client.query(query, [user.ID]);
-    const [{ count }] = res.rows;
-    if (count > 0) return { data: true };
-    return { data: false };
-  } catch (e) {
-    return { error: e.detail, code: 500 };
-  } finally {
-    if (client)
-      client.release();
-  }
+export async function hasDailyPokemon(userId) {
+  const res = await runQuery(`SELECT count(*) from ${TABLE_NAME} WHERE user_id = $1;`, [userId]);
+  if (res.error) return res;
+  const [{ count }] = res.data.rows;
+  if (count > 0) return { data: true };
+  return { data: false };
 }
-// export async function savePokemonForUser(pokemon, user) {
 
-// }
+export async function savePokemonForUser(pokemonId, userId) {
+  const res = await runQuery(`INSERT INTO daily_pokemon (pokedex_id, user_id) VALUES ($1,$2);`, [pokemonId, userId]);
+  return res;
+}

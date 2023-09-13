@@ -1,11 +1,11 @@
 import { compare } from "bcrypt";
-import { getDbClient } from "./db.js";
+import { runQuery } from "./db.js";
 
 const TABLE_NAME = "user";
 
 /**
  * @typedef {Object} User
- * @property {number} ID
+ * @property {number} id
  * @property {string} username 
  * @property {string} password 
  * @property {string} salt 
@@ -13,50 +13,31 @@ const TABLE_NAME = "user";
 
 /**
  * @returns {Promise<import("./db.js").Result | undefined>}
- * @param {Omit<User, 'ID'>} user 
+ * @param {Omit<User, 'id'>} user 
 
  */
 export async function saveUser(user) {
-  let client;
-  try {
-    client = await getDbClient();
-    const query = `
-    INSERT INTO "${TABLE_NAME}" ("username","password","salt") VALUES ($1, $2, $3) RETURNING ID
-    `;
-    const res = await client.query(query, [user.username, user.password, user.salt]);
-    return { data: res.rows[0].id };
-  } catch (e) {
-    if (e.code === "23505") {
+  const res = await runQuery(`
+  INSERT INTO "${TABLE_NAME}" ("username","password","salt") VALUES ($1, $2, $3) RETURNING ID`,
+    [user.username, user.password, user.salt]);
+
+  if (res.error) {
+    if (res.code === "23505") {
       return { error: "Username already exists", code: 409 };
     }
-    return { error: e.detail, code: 500 };
-  } finally {
-    if (client)
-      client.release();
+    return { error: res.error.detail, code: 500 };
   }
+  return { data: res.data.rows[0].id };
 }
 /**
  * 
  * @returns {Promise<import("./db.js").Result>} 
  */
 export async function getUsers() {
-  let client;
-  try {
-    client = await getDbClient();
 
-    const query = `
-    SELECT * FROM "user"
-    `;
-    /** @type {{rows: User[]}} */
-    const res = await client.query(query);
-    return { data: res.rows };
-
-  } catch (e) {
-    return { error: e.detail };
-  } finally {
-    if (client)
-      client.release();
-  }
+  const res = await runQuery(`SELECT * FROM "user"`, []);
+  if (res.error) return res.error;
+  return { data: res.data.rows };
 }
 
 /**
@@ -65,27 +46,12 @@ export async function getUsers() {
  * @returns {Promise<import("./db.js").Result>}
  */
 export async function getUserByUsername(username) {
-  let client;
-  try {
-    client = await getDbClient();
-
-    const query = `
-    SELECT *  FROM "${TABLE_NAME}"
-    WHERE username = $1
-    `;
-    /** @type {{rows: User[]}} */
-    const res = await client.query(query, [username]);
-    if (res.rows.length === 0) {
-      return { error: 'user not found' };
-    }
-    return { data: res.rows[0] };
-
-  } catch (e) {
-    return { error: e.detail };
-  } finally {
-    if (client)
-      client.release();
+  const res = await runQuery(`SELECT *  FROM "${TABLE_NAME}" WHERE username = $1`, [username]);
+  if (res.error) return res.error;
+  if (res.data.rows.length === 0) {
+    return { error: 'user not found' };
   }
+  return { data: res.data.rows[0] };
 }
 
 /**

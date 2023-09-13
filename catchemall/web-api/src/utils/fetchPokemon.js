@@ -2,6 +2,10 @@ function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * 
+ * @returns {Promise<import("../routes/pokemon.router.js").Pokemon[]>}
+ */
 export async function fetchDailyPokemon() {
   const numberToFetch = process.env['DAILY_POKEMON_NO'] ? parseInt(process.env['DAILY_POKEMON_NO']) : 5;
   const url = 'https://pokeapi.co/api/v2/pokemon';

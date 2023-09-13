@@ -3,6 +3,7 @@ import express from "express";
 import passport from "passport";
 import { saveUser } from "../db/users.store.js";
 import { getTokenForUser } from '../utils/user.utils.js';
+import { createDailyPokemonForUser } from '../business/dailyPokemon.js';
 export const authRouter = express.Router();
 
 
@@ -21,10 +22,11 @@ authRouter.post("/register", async (req, res) => {
   const user = { username, password: hash, salt };
   const result = await saveUser(user);
   if (result?.error) {
-    res.status(result.code).send(result);
+    res.status(+result.code).send(result);
     return;
   }
-  const token = getTokenForUser({ username, password, salt, ID: result.data });
+  const token = getTokenForUser({ username, password, salt, id: result.data });
+  await createDailyPokemonForUser(result.data);
   return res.send({ token });
 });
 
