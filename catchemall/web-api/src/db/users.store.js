@@ -13,16 +13,18 @@ const TABLE_NAME = "user";
 
 /**
  * @returns {Promise<import("./db.js").Result | undefined>}
- * @param {User} user 
+ * @param {Omit<User, 'ID'>} user 
+
  */
 export async function saveUser(user) {
   let client;
   try {
     client = await getDbClient();
     const query = `
-    INSERT INTO "${TABLE_NAME}" ("username","password","salt") VALUES ($1, $2, $3)
+    INSERT INTO "${TABLE_NAME}" ("username","password","salt") VALUES ($1, $2, $3) RETURNING ID
     `;
-    await client.query(query, [user.username, user.password, user.salt]);
+    const res = await client.query(query, [user.username, user.password, user.salt]);
+    return { data: res.rows[0].id };
   } catch (e) {
     if (e.code === "23505") {
       return { error: "Username already exists", code: 409 };

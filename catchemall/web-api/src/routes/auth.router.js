@@ -24,7 +24,7 @@ authRouter.post("/register", async (req, res) => {
     res.status(result.code).send(result);
     return;
   }
-  const token = getTokenForUser({ username, password, salt });
+  const token = getTokenForUser({ username, password, salt, ID: result.data });
   return res.send({ token });
 });
 

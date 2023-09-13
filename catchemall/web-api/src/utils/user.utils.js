@@ -9,6 +9,6 @@ import { getTokenExpiresIn } from '../config.js';
 export function getTokenForUser(user) {
   if (!user.username) throw new Error('cannot get token for user with no username');
   const secret = process.env['JWT_SECRET_KEY'];
-  return jwt.sign({ username: user.username }, secret, { expiresIn: getTokenExpiresIn(), });
+  return jwt.sign({ username: user.username, ID: user.ID }, secret, { expiresIn: getTokenExpiresIn(), });
 }
 
