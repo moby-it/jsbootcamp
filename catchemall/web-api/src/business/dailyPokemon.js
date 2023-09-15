@@ -2,7 +2,7 @@ import { hasDailyPokemon, savePokemonForUser } from '../db/dailyPokemon.store.js
 import { runQuery } from '../db/db.js';
 import { savePokemon } from '../db/pokemon.store.js';
 import { getUsers } from '../db/users.store.js';
-import { fetchDailyPokemon } from '../utils/fetchPokemon.js';
+import { fetchDailyPokemon } from '../utils/pokemon.utils.js';
 
 import cron from 'node-cron';
 

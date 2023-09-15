@@ -35,7 +35,7 @@ export const UserContext = createContext(null);
 function useUsers() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState();
-  const { fetchPokemonCaught, setPokemonCaught } = useContext(PokedexContext);
+  const { fetchPokemonCaught, setPokemonCaught, dailyPokemonQuery, setDailyPokemon } = useContext(PokedexContext);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -47,9 +47,16 @@ function useUsers() {
     }
     setIsLoading(true);
     localStorage.setItem('token', token);
-    Promise.all([fetchPokemonCaught(), fetchUsersQuery.refetch()]).then(([pokemonCaught, users]) => {
+    Promise.all([
+      fetchPokemonCaught(),
+      fetchUsersQuery.refetch(),
+      dailyPokemonQuery.refetch()
+    ]).then(([pokemonCaught, users, dailyPokemon]) => {
       const user = decodeJwt(token);
       setPokemonCaught(pokemonCaught.data);
+      setDailyPokemon(dailyPokemon.data.map(p => ({
+        name: p.name, id: p.pokedex_id, types: p.types, imageUrl: p.image_url, caught: p.caught
+      })));
       setCurrentUser(user);
       setUsers(users.data);
       setIsLoading(false);
@@ -96,7 +103,7 @@ function useUsers() {
     setUsers([]);
     setToken();
   }
-  const fetchUsersQuery = useQuery('fetchUsers', () => fetchUsers(), { enabled: false });
+  const fetchUsersQuery = useQuery('fetchUsers', () => fetchUsers());
 
   return {
     users,

@@ -25,12 +25,24 @@ function postPokemonCaught(lastPokemonCaught) {
  * @property {Array<string>} types
  * @property {string} imageUrl 
  */
+/**
+ * @typedef {Object} DailyPokemon
+ * @property {string} id - Pokemon pokedex id
+ * @property {string} name
+ * @property {Array<string>} types
+ * @property {string} imageUrl
+ * @property {boolean} caught
+ */
 
 /**
  * @typedef {Object} PokedexContextValue
- * @property {Array<Pokemon>} pokemonCaught - An array of caught pokemons.
- * @property {(Array<Pokemon>)=>void} setPokemonCaught
- * @property {(pokemon:Pokemon)=> Promise<void>} catchPokemon - A function to catch a pokemon.
+ * @property {Array<Pokemon>} pokemonCaught
+ * @property {Array<DailyPokemon>} dailyPokemon
+ * @property {(Array<Pokemon>) =>void} setPokemonCaught
+ * @property {(Array<DailyPokemon>) =>void} setDailyPokemon
+ * @property {(pokemon:Pokemon) => Promise<void>} catchPokemon
+ * @property {import("react-query").UseQueryResult} dailyPokemonQuery
+ * 
  */
 
 /**
@@ -40,28 +52,44 @@ export const PokedexContext = createContext(null);
 
 function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState([]);
+  const [dailyPokemon, setDailyPokemon] = useState([]);
+
   const pokemonCaughtQuery = useQuery('pokemonCaught', () => {
     return fetchWithAuth(`${apiUrl()}/pokemon/caught`).then(r => r.json());
-  }, { enabled: false });
+  });
 
-  const { mutate } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
+  const dailyPokemonQuery = useQuery('dailyPokemon', () => {
+    return fetchWithAuth(`${apiUrl()}/pokemon/daily`).then(r => r.json());
+  });
+
+  const { mutateAsync, isError } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
     () => setPokemonCaught([...pokemonCaught, pokemon])
   ));
 
+  /**
+   * 
+   * @param {Pokemon} pokemon 
+   * @returns {boolean}
+   */
   async function catchPokemon(pokemon) {
     if (Math.random() > 0.5) {
       const newPokemonList = pokemonCaught.slice();
       newPokemonList.push(pokemon);
-      mutate(pokemon);
+      await mutateAsync(pokemon);
+      if (isError) return false;
       return true;
     }
     return false;
   }
+
   return {
     pokemonCaught,
+    dailyPokemon,
     fetchPokemonCaught: pokemonCaughtQuery.refetch,
     catchPokemon,
-    setPokemonCaught
+    setPokemonCaught,
+    setDailyPokemon,
+    dailyPokemonQuery
   };
 }
 export function PokedexProvider({ children }) {

@@ -19,3 +19,4 @@ export async function savePokemon(pokemon) {
   const res = await runQuery(query, [pokemon.id, pokemon.name, pokemon.imageUrl, JSON.stringify(pokemon.types)]);
   return res;
 }
+

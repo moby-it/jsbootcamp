@@ -23,6 +23,16 @@ export async function hasDailyPokemon(userId) {
   return { data: false };
 }
 
+export async function getDailyPokemonForUser(userId) {
+  const query = `
+  select daily_pokemon.pokedex_id,name,image_url,types,caught from daily_pokemon
+    inner join public."pokemon" p on p.pokedex_id = daily_pokemon.pokedex_id
+       where user_id = $1`;
+  const res = await runQuery(query, [userId]);
+  if (res.error) return res;
+  return { data: res.data.rows };
+}
+
 export async function savePokemonForUser(pokemonId, userId) {
   const res = await runQuery(`INSERT INTO daily_pokemon (pokedex_id, user_id) VALUES ($1,$2);`, [pokemonId, userId]);
   return res;

@@ -1,7 +1,9 @@
 
 import express from 'express';
-import fs from 'fs';
+import { getDailyPokemonForUser } from '../db/dailyPokemon.store.js';
+import { catchPokemon, getPokemonCaughtForUser } from '../db/userPokemon.store.js';
 import { validateToken } from '../middleware/auth.middleware.js';
+import { attemptCatch } from '../utils/pokemon.utils.js';
 /**
  * @typedef {Object} Pokemon
  * @property {string} id - Pokemon pokedex id
@@ -10,34 +12,30 @@ import { validateToken } from '../middleware/auth.middleware.js';
  * @property {string} imageUrl 
  */
 
-/**
- * @type {Pokemon[]}
- */
-const pokemonCaught = [];
 
 export const pokemonRouter = express.Router();
 
 pokemonRouter.use(validateToken);
 
-const pokemonCaughtFileName = "pokemonCaught.json";
-pokemonRouter.post("/catch", async (req, res) => {
-  const pokemonId = req.body.id;
-  if (pokemonId) {
-    pokemonCaught.push(req.body);
-    await savePokemon(req.body);
-    res.send(JSON.stringify(req.body));
-  }
+pokemonRouter.post("/catch/:id", async (req, res) => {
+  const user = res.locals.user;
+  const pokemonId = req.params.id;
+  if (!pokemonId) return res.sendStatus(400);
+  const caught = attemptCatch();
+  const response = await catchPokemon(user.id, pokemonId, caught);
+  if (response.error) return res.sendStatus(500);
+  return res.send({ caught });
 });
-pokemonRouter.get("/caught", (req, res) => {
-  res.json(pokemonCaught);
+pokemonRouter.get("/caught", async (req, res) => {
+  const user = res.locals.user;
+  const response = await getPokemonCaughtForUser(user.id);
+  if (response.error) return res.sendStatus(500);
+  return res.send(response.data);
 });
-async function savePokemon(pokemon) {
-  const exists = fs.existsSync(pokemonCaughtFileName);
-  if (!exists) {
-    fs.writeFileSync(pokemonCaughtFileName, JSON.stringify([]));
-  }
-  const data = fs.readFileSync(pokemonCaughtFileName, 'utf-8');
-  const pokemonCaught = JSON.parse(data);
-  pokemonCaught.push(pokemon);
-  fs.writeFileSync(pokemonCaughtFileName, JSON.stringify(pokemonCaught));
-}
+pokemonRouter.get("/daily", async (req, res) => {
+  const user = res.locals.user;
+  if (!user || !user?.id) return res.send(401);
+  const response = await getDailyPokemonForUser(user.id);
+  if (response.error) return res.sendStatus(500);
+  return res.send(response.data);
+});

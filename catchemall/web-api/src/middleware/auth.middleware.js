@@ -15,6 +15,7 @@ export function validateToken(req, res, next) {
   let user;
   try {
     user = jwt.verify(token, getJwtSecret());
+    res.locals.user = user;
   } catch (e) {
     return res.sendStatus(401);
   }
