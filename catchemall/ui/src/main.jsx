@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AppProviders } from './providers';
+import "./styles/reset.css";
 import "./styles/spacing.css";
 import "./styles/button.css";
 import './styles/index.css';

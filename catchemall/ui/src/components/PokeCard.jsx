@@ -15,9 +15,9 @@ function PokeCard({ id, name, types, imageUrl }) {
     }
   }
   return <div className={wrapperClass}>
-    <h2>#{id} {caught && <CaughtIcon />}</h2>
-    <h2>{name}</h2>
-    <h3>{types.join(",")}</h3>
+    <h2 className="p-1">#{id} {caught && <CaughtIcon />}</h2>
+    <h2 className="p-1 mb-2">{name}</h2>
+    <p>{types.join(",")}</p>
     <img src={imageUrl} alt={name} />
     <button className="btn" disabled={clicked} onClick={() => onCatchPokemon({ id, name, types, imageUrl })}>Catch</button>
   </div>;

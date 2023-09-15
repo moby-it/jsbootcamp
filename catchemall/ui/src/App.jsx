@@ -10,11 +10,21 @@ import { ErrorPage } from './pages/ErrorPage';
 import { useContext, useEffect } from "react";
 import { UserContext } from './context/userContext';
 import { tokenIsValid } from "./utils/auth.helpers";
+import { Header } from "./components/Header";
+import { User } from "./pages/User";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute>
       <DailyPokemon />
+    </ProtectedRoute>,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/user",
+    element: <ProtectedRoute>
+      <User />
     </ProtectedRoute>,
     errorElement: <ErrorPage />,
   },
@@ -38,7 +48,10 @@ function ProtectedRoute({ children }) {
   const { currentUser, isLoading } = useContext(UserContext);
   if (isLoading) return <span>Loading...</span>;
   if (!currentUser) return <Navigate to="/login" replace />;
-  return children;
+  return <>
+    <Header />
+    {children}
+  </>;
 }
 function UnauthenticatedRoute({ children }) {
   const { setToken, isLoading, setIsLoading, currentUser } = useContext(UserContext);
