@@ -48,7 +48,7 @@ async function refreshDailyPokemon() {
 
 }
 export function registerRefreshPokemonCron() {
-  cron.schedule('* * * * *', refreshDailyPokemon, {
+  cron.schedule('* 0 * * *', refreshDailyPokemon, {
     timezone: "Europe/Athens"
   });
 }

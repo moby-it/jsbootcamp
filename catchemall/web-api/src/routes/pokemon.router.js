@@ -22,8 +22,8 @@ pokemonRouter.post("/catch/:id", async (req, res) => {
   const pokemonId = req.params.id;
   if (!pokemonId) return res.sendStatus(400);
   const caught = attemptCatch();
-  const response = await catchPokemon(user.id, pokemonId, caught);
-  if (response.error) return res.sendStatus(500);
+  const response = await catchPokemon(user.id, +pokemonId, caught);
+  if (response.error) return res.status(500).send(response.error);
   return res.send({ caught });
 });
 pokemonRouter.get("/caught", async (req, res) => {
@@ -34,7 +34,6 @@ pokemonRouter.get("/caught", async (req, res) => {
 });
 pokemonRouter.get("/daily", async (req, res) => {
   const user = res.locals.user;
-  if (!user || !user?.id) return res.send(401);
   const response = await getDailyPokemonForUser(user.id);
   if (response.error) return res.sendStatus(500);
   return res.send(response.data);

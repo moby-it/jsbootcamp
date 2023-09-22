@@ -15,6 +15,9 @@ export function validateToken(req, res, next) {
   let user;
   try {
     user = jwt.verify(token, getJwtSecret());
+    if (!(typeof user === 'object' && 'id' in user)) {
+      throw new Error("invalid user extracted from token");
+    }
     res.locals.user = user;
   } catch (e) {
     return res.sendStatus(401);

@@ -7,5 +7,7 @@ export const userRouter = express.Router();
 userRouter.use(validateToken);
 
 userRouter.get('/', async (req, res) => {
-  return res.send(await getUsers());
+  const response = await getUsers();
+  if (response.error) return res.sendStatus(500);
+  return res.send(response.data);
 });

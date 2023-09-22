@@ -53,10 +53,8 @@ function useUsers() {
       dailyPokemonQuery.refetch()
     ]).then(([pokemonCaught, users, dailyPokemon]) => {
       const user = decodeJwt(token);
-      setPokemonCaught(pokemonCaught.data);
-      setDailyPokemon(dailyPokemon.data.map(p => ({
-        name: p.name, id: p.pokedex_id, types: p.types, imageUrl: p.image_url, caught: p.caught
-      })));
+      setPokemonCaught(pokemonCaught.data.map(transform));
+      setDailyPokemon(dailyPokemon.data.map(transform));
       setCurrentUser(user);
       setUsers(users.data);
       setIsLoading(false);
@@ -135,4 +133,16 @@ export function UserProvider({ children }) {
   return <UserContext.Provider value={r}>
     {children}
   </UserContext.Provider>;
+}
+
+
+/**
+ * @description takes as input an pokemon as return from the api and transforms it to what the ui needs
+ * @param {{name:string, pokedex_id: number,types:string[], image_url:string,caught:boolean}} p 
+ * @returns {import("./pokedexContext").Pokemon}
+ */
+function transform(p) {
+  return {
+    name: p.name, id: p.pokedex_id, types: p.types, imageUrl: p.image_url, caught: p.caught
+  };
 }

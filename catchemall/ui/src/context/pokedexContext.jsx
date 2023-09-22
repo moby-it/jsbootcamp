@@ -9,13 +9,13 @@ import { apiUrl } from "../utils/config";
  * @returns 
  */
 function postPokemonCaught(lastPokemonCaught) {
-  return fetchWithAuth(`${apiUrl()}/pokemon/catch`, {
+  return fetchWithAuth(`${apiUrl()}/pokemon/catch/${lastPokemonCaught.id}`, {
     headers: {
       "Content-Type": "application/json",
     },
     method: 'POST',
     body: JSON.stringify(lastPokemonCaught)
-  });
+  }).then(r => r.json());
 }
 
 /**
@@ -62,8 +62,13 @@ function usePokedex() {
     return fetchWithAuth(`${apiUrl()}/pokemon/daily`).then(r => r.json());
   });
 
-  const { mutateAsync, isError } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
-    () => setPokemonCaught([...pokemonCaught, pokemon])
+  const { mutateAsync, isError, data } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
+    ({ caught }) => {
+      if (caught) {
+        setPokemonCaught([...pokemonCaught, pokemon]);
+      }
+      setDailyPokemon(dailyPokemon.map(dp => dp.id === pokemon.id ? { ...dp, caught } : dp));
+    }
   ));
 
   /**
@@ -72,14 +77,11 @@ function usePokedex() {
    * @returns {boolean}
    */
   async function catchPokemon(pokemon) {
-    if (Math.random() > 0.5) {
-      const newPokemonList = pokemonCaught.slice();
-      newPokemonList.push(pokemon);
-      await mutateAsync(pokemon);
-      if (isError) return false;
-      return true;
-    }
-    return false;
+    await mutateAsync(pokemon);
+    if (isError) return false;
+    console.log('tried to catch', pokemon.name);
+    console.log('result', data);
+    return;
   }
 
   return {

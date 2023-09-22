@@ -21,10 +21,13 @@ export async function catchPokemon(userId, pokemonId, caught) {
   let res = await runQuery(canCatchQuery, [pokemonId, userId]);
   if (res.error) return res;
   if (res.data.rows.length) {
-    let query = `insert INTO user_pokemon (pokedex_id, user_id) VALUES ($1, $2)`;
-    res = await runQuery(query, [pokemonId, userId]);
-    query = `UPDATE daily_pokemon set caught=$1 where pokedex_id=$2`;
-    res = await runQuery(query, [caught, pokemonId]);
+    let query;
+    if (caught) {
+      query = `insert INTO user_pokemon (pokedex_id, user_id) VALUES ($1, $2)`;
+      res = await runQuery(query, [pokemonId, userId]);
+    }
+    query = `UPDATE daily_pokemon set caught=$1 where pokedex_id=$2 and user_id=$3`;
+    res = await runQuery(query, [caught, pokemonId, userId]);
     return res;
   }
   return { error: "YOU ARE A SCUM OF THE EARTH" };
