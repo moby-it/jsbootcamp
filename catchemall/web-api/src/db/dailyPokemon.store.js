@@ -19,7 +19,7 @@ export async function hasDailyPokemon(userId) {
   const res = await runQuery(`SELECT count(*) from ${TABLE_NAME} WHERE user_id = $1;`, [userId]);
   if (res.error) return res;
   const [{ count }] = res.data.rows;
-  if (count > 0) return { data: true };
+  if (+count > 0) return { data: true };
   return { data: false };
 }
 
