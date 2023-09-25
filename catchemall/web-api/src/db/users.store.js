@@ -35,7 +35,7 @@ export async function saveUser(user) {
  */
 export async function getUsers() {
 
-  const res = await runQuery(`SELECT * FROM "user"`, []);
+  const res = await runQuery(`SELECT id, username FROM "${TABLE_NAME}"`, []);
   if (res.error) return res.error;
   return { data: res.data.rows };
 }
@@ -46,7 +46,7 @@ export async function getUsers() {
  * @returns {Promise<import("./db.js").Result>}
  */
 export async function getUserByUsername(username) {
-  const res = await runQuery(`SELECT *  FROM "${TABLE_NAME}" WHERE username = $1`, [username]);
+  const res = await runQuery(`SELECT * FROM "${TABLE_NAME}" WHERE username = $1`, [username]);
   if (res.error) return res.error;
   if (res.data.rows.length === 0) {
     return { error: 'user not found' };

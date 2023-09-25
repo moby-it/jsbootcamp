@@ -12,6 +12,7 @@ import { UserContext } from './context/userContext';
 import { tokenIsValid } from "./utils/auth.helpers";
 import { Header } from "./components/Header";
 import { User } from "./pages/User";
+import { Users } from "./pages/Users";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,20 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
+    element: <ProtectedRoute>
+      <User />
+    </ProtectedRoute>,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/users",
+    element: <ProtectedRoute>
+      <Users />
+    </ProtectedRoute>,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/user/:id",
     element: <ProtectedRoute>
       <User />
     </ProtectedRoute>,

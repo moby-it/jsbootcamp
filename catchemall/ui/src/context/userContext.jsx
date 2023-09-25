@@ -6,6 +6,7 @@ import { PokedexContext } from "./pokedexContext";
 /**
  * @typedef {Object} User
  * @property {string} username
+ * @property {number} id
  */
 
 /**

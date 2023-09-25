@@ -9,6 +9,7 @@ export async function getPokemonCaughtForUser(userId) {
   inner join public.pokemon p on p.pokedex_id = user_pokemon.pokedex_id
   where user_id = $1`;
   const res = await runQuery(query, [userId]);
+  if (res.error) return res;
   return { data: res.data.rows };
 }
 
@@ -23,7 +24,7 @@ export async function catchPokemon(userId, pokemonId, caught) {
   if (res.data.rows.length) {
     let query;
     if (caught) {
-      query = `insert INTO user_pokemon (pokedex_id, user_id) VALUES ($1, $2)`;
+      query = `insert INTO ${TABLE_NAME} (pokedex_id, user_id) VALUES ($1, $2)`;
       res = await runQuery(query, [pokemonId, userId]);
     }
     query = `UPDATE daily_pokemon set caught=$1 where pokedex_id=$2 and user_id=$3`;
