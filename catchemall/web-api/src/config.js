@@ -1,15 +1,7 @@
 
 function validateDbConfig() {
-  const dbConfig = {
-    PGUSER: process.env['PGUSER'],
-    PGPASSWORD: process.env['PGPASSWORD'],
-    PGHOST: process.env['PGHOST'],
-    PGPORT: process.env['PGPORT'],
-    PGDATABASE: process.env['PGDATABASE']
-  };
-  for (const [key, value] of Object.entries(dbConfig)) {
-    if (!value) throw new Error(`${key} is not defined`);
-  }
+  const connectionString = process.env['DB_CONNECTION_STRING'];
+  if (!connectionString) throw new Error(`connectionString is not defined`);
 }
 
 export function validateConfig() {

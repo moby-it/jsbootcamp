@@ -21,7 +21,9 @@ const __dirname = path.dirname(__filename);
 let pool;
 
 export async function createDbPool() {
-  pool = new pg.Pool();
+  pool = new pg.Pool({
+    connectionString: process.env['DB_CONNECTION_STRING']
+  });
   console.log("connecting to database");
   const client = await pool.connect();
   console.log("Succesfully connected to database");

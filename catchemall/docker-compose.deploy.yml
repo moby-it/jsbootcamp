@@ -1,0 +1,45 @@
+services:
+  ui:
+    image: ${REPOSITORY_NAME}/catchemall-ui:latest
+    ports:
+      - 9138:80
+    deploy:
+      rollback_config:
+        failure_action: pause
+        monitor: 5s
+        parallelism: 1
+      restart_policy:
+        condition: any
+        delay: 3s
+        max_attempts: 3
+      update_config:
+        monitor: 5s
+        failure_action: rollback
+        delay: 5s
+        parallelism: 1
+        order: start-first
+  api:
+    image: ${REPOSITORUI_ENVY_NAME}/catchemall-api:latest
+    ports:
+      - 9139:4000
+    configs:
+      - source: catchemall-api-v1.conf
+        target: /app/.env
+    deploy:
+      rollback_config:
+        failure_action: pause
+        monitor: 5s
+        parallelism: 1
+      restart_policy:
+        condition: any
+        delay: 3s
+        max_attempts: 3
+      update_config:
+        monitor: 5s
+        failure_action: rollback
+        delay: 5s
+        parallelism: 1
+        order: start-first
+configs:
+  catchemall-api-v1.conf:
+    external: true

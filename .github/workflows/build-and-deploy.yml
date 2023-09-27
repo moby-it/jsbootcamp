@@ -1,0 +1,75 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Deploy Stack
+
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  test-api:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test api
+        working-directory: ./catchemall/web-api
+        run: npm ci && npm run test
+  build-push-api:
+    needs: test-api
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.CONTAINER_USERNAME }}
+          password: ${{ secrets.CONTAINER_PASSWORD }}
+      - name: Web Api - Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ secrets.REPOSITORY_NAME }}/catchemall-api
+          context: ./catchemall/web-api
+          file: ./catchemall/web-api/Dockerfile
+  build-push-ui:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.CONTAINER_USERNAME }}
+          password: ${{ secrets.CONTAINER_PASSWORD }}
+      - name: 'Create env file'
+        run: |
+          echo "${{ secrets.UI_ENV }}" > catchemall/ui/.env
+      - name: UI - Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ secrets.REPOSITORY_NAME }}/catchemall-ui
+          context: ./catchemall/ui
+          file: ./catchemall/ui/Dockerfile
+  deploy:
+    needs: [build-push-api, build-push-ui]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Replace variables in deploy file
+        run: |
+          sed -i "s/\${REPOSITORY_NAME}/${{ secrets.REPOSITORY_NAME }}/g" catchemall/docker-compose.deploy.yml
+      - name: Deploy Stack
+        uses: kitconcept/docker-stack-deploy@v1.2.0
+        with:
+          remote_host: ${{ secrets.HOST }}
+          remote_user: ${{ secrets.USERNAME }}
+          remote_private_key: ${{ secrets.KEY }}
+          registry: "docker.io"
+          deploy_timeout: 300
+          username: ${{ secrets.CONTAINER_USERNAME }}
+          password: ${{ secrets.CONTAINER_PASSWORD }}
+          stack_file: "catchemall/docker-compose.deploy.yml"
+          stack_name: "catchemall"

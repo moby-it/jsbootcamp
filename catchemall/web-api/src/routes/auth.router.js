@@ -11,12 +11,8 @@ authRouter.post("/register", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.sendStatus(400);
 
-  let saltRounds = Number(process.env['SALT_ROUNDS']);
-
-  if (!saltRounds) {
-    console.warn('SALT_ROUNDS not found in env. defaulting to 10');
-    saltRounds = 10;
-  };
+  const saltRounds = 10;
+  
   const salt = await bcrypt.genSalt(saltRounds);
   const hash = await bcrypt.hash(password, salt);
   const user = { username, password: hash, salt };
