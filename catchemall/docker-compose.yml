@@ -12,9 +12,7 @@ services:
     build:
       context: web-api
     env_file:
-      - web-api/.env
-    environment:
-      - PGHOST=db
+      - web-api/docker.env
     ports:
       - 4000:4000
     depends_on:

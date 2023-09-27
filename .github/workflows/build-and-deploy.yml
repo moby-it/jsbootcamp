@@ -73,3 +73,4 @@ jobs:
           password: ${{ secrets.CONTAINER_PASSWORD }}
           stack_file: "catchemall/docker-compose.deploy.yml"
           stack_name: "catchemall"
+          debug: 1

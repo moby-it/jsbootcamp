@@ -1,3 +1,4 @@
+version: '3.9'
 services:
   ui:
     image: ${REPOSITORY_NAME}/catchemall-ui:latest
@@ -19,12 +20,12 @@ services:
         parallelism: 1
         order: start-first
   api:
-    image: ${REPOSITORUI_ENVY_NAME}/catchemall-api:latest
+    image: ${REPOSITORY_NAME}/catchemall-api:latest
     ports:
       - 9139:4000
     configs:
-      - source: catchemall-api-v1.conf
-        target: /app/.env
+      - source: catchemall-api-v2.conf
+        target: app/.env
     deploy:
       rollback_config:
         failure_action: pause
@@ -41,5 +42,5 @@ services:
         parallelism: 1
         order: start-first
 configs:
-  catchemall-api-v1.conf:
+  catchemall-api-v2.conf:
     external: true
