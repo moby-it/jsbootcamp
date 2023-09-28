@@ -1,3 +1,10 @@
+import { useContext } from "react";
+import { UserContext } from '../context/userContext';
+import { Card } from '../components/Card';
 export function Users() {
-  return <h1>Hello from users</h1>;
+  const { users } = useContext(UserContext);
+
+  return <Card>
+    {users.map(u => <h2 key={u.id} >{u.username}</h2>)}
+  </Card>;
 }
