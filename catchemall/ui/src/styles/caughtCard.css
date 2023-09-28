@@ -16,3 +16,14 @@
   flex-wrap: wrap;
   align-self: flex-start;
 }
+.user-caught-pokemon {
+  align-items: center;
+  gap: 1rem;
+}
+.user-caught-pokemon  span{
+  font-size: larger;
+}
+.user-caught-container {
+  max-height: 600px;
+  overflow-y: auto;
+}

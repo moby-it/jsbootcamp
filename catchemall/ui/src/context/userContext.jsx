@@ -3,6 +3,8 @@ import { useQuery } from "react-query";
 import { decodeJwt, fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
 import { PokedexContext } from "./pokedexContext";
+import { transform } from "./pokedexContext";
+
 /**
  * @typedef {Object} User
  * @property {string} username
@@ -134,16 +136,4 @@ export function UserProvider({ children }) {
   return <UserContext.Provider value={r}>
     {children}
   </UserContext.Provider>;
-}
-
-
-/**
- * @description takes as input an pokemon as return from the api and transforms it to what the ui needs
- * @param {{name:string, pokedex_id: number,types:string[], image_url:string,caught:boolean}} p 
- * @returns {import("./pokedexContext").Pokemon}
- */
-function transform(p) {
-  return {
-    name: p.name, id: p.pokedex_id, types: p.types, imageUrl: p.image_url, caught: p.caught
-  };
 }

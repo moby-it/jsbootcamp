@@ -5,7 +5,7 @@ import { UserContext } from '../context/userContext';
 
 export function Header() {
   const { logout } = useContext(UserContext);
-  return <div className="header w-100 flex justify-between align-center" style={{ height: '100px' }}>
+  return <div className="header w-100 row justify-between align-center" style={{ height: '100px' }}>
     <Link to="/">
       <h1>PokeList</h1>
     </Link>
