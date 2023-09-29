@@ -1,19 +1,11 @@
 version: '3.9'
 services:
-  ui:
-    build:
-      context: ui
-    env_file:
-      - ui/docker.env
-    ports:
-      - 4200:80
-    depends_on: 
-      - api
   api:
     build:
-      context: web-api
+      context: .
+    command: ["npm","test"]
     env_file:
-      - web-api/docker.env
+      - docker.env
     ports:
       - 4000:4000
     depends_on:
@@ -25,8 +17,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=catchemall
-    volumes:
-      - ./ps-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

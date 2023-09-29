@@ -1,17 +1,9 @@
-import { configDotenv } from "dotenv";
-import express from "express";
+import { bootstrap } from "../src/bootstrap.js";
 import request from "supertest";
-import { registerMiddleware } from "../src/middleware/index.js";
-import { authRouter } from "../src/routes/auth.router.js";
-import { userRouter } from "../src/routes/user.router.js";
 describe('Auth Router Test', () => {
   let app;
-  beforeAll(() => {
-    app = express();
-    configDotenv({ path: 'test.env' });
-    registerMiddleware(app);
-    app.use("/auth", authRouter);
-    app.use('/users', userRouter);
+  beforeAll(async () => {
+    app = await bootstrap();
   });
   describe('register', () => {
     it('should throw 400 if no body sent', async () => {

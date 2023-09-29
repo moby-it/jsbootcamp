@@ -6,11 +6,11 @@
 /** @type {import('jest').Config} */
 const config = {
   clearMocks: true,
-  collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.js'],
-  coverageDirectory: "coverage",
+  // collectCoverage: true,
+  // collectCoverageFrom: ['src/**/*.js'],
+  // coverageDirectory: "coverage",
   verbose: true,
-  detectOpenHandles: true,
+  forceExit: true,
   transform: {},
 };
 
