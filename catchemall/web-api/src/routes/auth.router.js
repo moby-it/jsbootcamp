@@ -3,7 +3,7 @@ import express from "express";
 import passport from "passport";
 import { saveUser } from "../db/users.store.js";
 import { getTokenForUser } from '../utils/user.utils.js';
-import { createDailyPokemonForUser } from '../business/dailyPokemon.js';
+import { createDailyPokemonForUser } from '../utils/dailyPokemon.utils.js';
 export const authRouter = express.Router();
 
 
