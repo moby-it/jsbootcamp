@@ -1,0 +1,17 @@
+ALTER TABLE user_pokemon
+DROP CONSTRAINT fk_user;
+
+ALTER TABLE user_pokemon
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES "user"(ID)
+ON DELETE CASCADE;
+
+ALTER TABLE daily_pokemon
+DROP CONSTRAINT fk_user;
+
+ALTER TABLE daily_pokemon
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES "user"(ID)
+ON DELETE CASCADE;
