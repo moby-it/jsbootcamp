@@ -35,7 +35,11 @@ export async function saveUser(user) {
  */
 export async function getUsers() {
 
-  const res = await runQuery(`SELECT id, username FROM "${TABLE_NAME}"`, []);
+  const res = await runQuery(`
+  SELECT "user".id, username, COUNT(up.pokedex_id) AS caughtPokemon FROM "user"
+  LEFT JOIN public.user_pokemon up ON "user".id = up.user_id
+  GROUP BY "user".id, username;
+  `, []);
   if (res.error) return res.error;
   return { data: res.data.rows };
 }
