@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card } from "../components/Card";
 import { UserContext } from "../context/userContext";
 export function Login() {
 
@@ -19,7 +18,7 @@ export function Login() {
     }
   }
 
-  return <Card classes={['mt-2']}>
+  return <div className='mt-2 card'>
     <form className="login-form">
       <div className="form-field">
         <label htmlFor="username">Username</label>
@@ -35,5 +34,5 @@ export function Login() {
         {"Don't"} have an account?<br /><Link to="/register">Register here</Link>
       </div>
     </form>
-  </Card>;
+  </div>;
 }

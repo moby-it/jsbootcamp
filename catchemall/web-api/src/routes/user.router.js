@@ -9,5 +9,5 @@ userRouter.use(validateToken);
 userRouter.get('/', async (req, res) => {
   const response = await getUsers();
   if (response.error) return res.sendStatus(500);
-  return res.send(response.data);
+  return res.send(response.data.sort((a, b) => a.caughtpokemon < b.caughtpokemon ? 1 : -1));
 });

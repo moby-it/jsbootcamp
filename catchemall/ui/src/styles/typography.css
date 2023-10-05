@@ -7,19 +7,14 @@ body {
 h1 {
   font-family: "pokemon";
   font-size: 4rem;
-  line-height: 25px;
-  /* letter-spacing: 5px; */
 }
 h2 {
   /* font-family: "pokemon"; */
   font-size: 1.75rem;
-  line-height: 25px;
-  /* letter-spacing: 5px; */
 }
 h3 {
   font-size: 1.25rem;
   line-height: 25px;
-  /* letter-spacing: 5px; */
 }
 
 label {

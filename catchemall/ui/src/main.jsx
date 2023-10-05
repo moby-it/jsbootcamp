@@ -7,6 +7,7 @@ import "./styles/caughtCard.css";
 import './styles/index.css';
 import "./styles/layout.css";
 import './styles/pokecard.css';
+import './styles/users.css';
 import "./styles/reset.css";
 import "./styles/spacing.css";
 import './styles/typography.css';

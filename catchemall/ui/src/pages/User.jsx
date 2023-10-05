@@ -36,6 +36,7 @@ export function User() {
   if (isSuccess) {
     return <>
       <h2>Username: {user.username}</h2>
+      {!data.length && <span>No pokemon caught</span>}
       <div className="col gap-1 user-caught-container p-1">
         {groupPokemonById(data.map(transform)).map(p =>
           <div className="row user-caught-pokemon" key={p.id}>
