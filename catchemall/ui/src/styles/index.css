@@ -23,3 +23,6 @@ body {
 .header svg:hover {
   color: lightblue;
 }
+.red {
+  color: lightcoral;
+}

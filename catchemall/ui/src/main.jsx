@@ -8,6 +8,7 @@ import './styles/index.css';
 import "./styles/layout.css";
 import './styles/pokecard.css';
 import './styles/users.css';
+import './styles/modal.css';
 import "./styles/reset.css";
 import "./styles/spacing.css";
 import './styles/typography.css';
