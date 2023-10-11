@@ -1,11 +1,13 @@
-import { useContext } from "react";
+import { RefreshCircular } from 'iconoir-react';
+import { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from 'react-router-dom';
+import { CaughtCard } from '../components/CaughtCard';
+import { Modal } from "../components/Modal";
+import { transform } from "../context/pokedexContext";
 import { UserContext } from '../context/userContext';
 import { fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
-import { CaughtCard } from '../components/CaughtCard';
-import { transform } from "../context/pokedexContext";
 
 /**
  * @argument {import("../context/pokedexContext").Pokemon[]} pokemonCaught
@@ -27,7 +29,9 @@ function groupPokemonById(pokemonCaught) {
 
 export function User() {
   let { id } = useParams();
-  const { users } = useContext(UserContext);
+  const [tradingPokemon, setTradingPokemon] = useState('');
+  const { users, currentUser } = useContext(UserContext);
+  const isCurrentUser = id === currentUser.id;
   const { data, isLoading, isSuccess } = useQuery(['pokemonCaughtForUser'],
     () => fetchWithAuth(`${apiUrl()}/pokemon/caught/${id}`).then(r => r.json()), { enabled: !!id });
   const user = users.find(u => u.id === +id);
@@ -41,9 +45,16 @@ export function User() {
         {groupPokemonById(data.map(transform)).map(p =>
           <div className="row user-caught-pokemon" key={p.id}>
             <span>{p.quantity}x</span>
-            <CaughtCard pokemon={p} /></div>
+            <CaughtCard pokemon={p} />
+            <span title="Trade" onClick={() => setTradingPokemon(p.name)}>
+              {!isCurrentUser && <RefreshCircular className="cursor-pointer" />}
+            </span>
+          </div>
         )}
       </div>
+      <Modal show={tradingPokemon} title={"Trading " + tradingPokemon} close={() => setTradingPokemon(null)}>
+        <h1>I am the modal</h1>
+      </Modal>
     </>;
   }
 }

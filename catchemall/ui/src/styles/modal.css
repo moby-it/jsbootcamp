@@ -1,0 +1,33 @@
+.modal {
+  position: fixed;
+  width: 600px;
+  height: 400px;
+  top: 20%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: lightgray;
+  border-radius: 12px;
+  color: black;
+  gap: 2rem;
+}
+
+.modal .header {
+  display: flex;
+  height: 30px;
+  padding: 0.75rem 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: larger;
+  font-weight: bolder;
+  border-bottom: 2px solid black;
+  background-color: rgb(157, 157, 157);
+}
+
+.modal .content {
+  padding: 1rem 2rem;
+}
+
+.modal .header svg {
+  color: rgb(146, 0, 0);
+}
