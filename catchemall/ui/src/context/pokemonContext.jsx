@@ -35,7 +35,7 @@ function postPokemonCaught(lastPokemonCaught) {
  */
 
 /**
- * @typedef {Object} PokedexContextValue
+ * @typedef {Object} PokemonContextValue
  * @property {Array<Pokemon>} pokemonCaught
  * @property {Array<DailyPokemon>} dailyPokemon
  * @property {(Array<Pokemon>) =>void} setPokemonCaught
@@ -46,9 +46,9 @@ function postPokemonCaught(lastPokemonCaught) {
  */
 
 /**
- * @type {React.Context<PokedexContextValue>}
+ * @type {React.Context<PokemonContextValue>}
  */
-export const PokedexContext = createContext(null);
+export const PokemonContext = createContext(null);
 
 function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState([]);
@@ -98,16 +98,16 @@ function usePokedex() {
 /**
  * @description takes as input an pokemon as return from the api and transforms it to what the ui needs
  * @param {{name:string, pokedex_id: number,types:string[], image_url:string,caught:boolean}} p 
- * @returns {import("./pokedexContext").Pokemon}
+ * @returns {import("./pokemonContext").Pokemon}
  */
 export function transform(p) {
   return {
     name: p.name, id: p.pokedex_id, types: p.types, imageUrl: p.image_url, caught: p.caught
   };
 }
-export function PokedexProvider({ children }) {
+export function PokemonProvider({ children }) {
   const ctxValue = usePokedex();
-  return <PokedexContext.Provider value={ctxValue}>
+  return <PokemonContext.Provider value={ctxValue}>
     {children}
-  </PokedexContext.Provider>;
+  </PokemonContext.Provider>;
 }

@@ -3,15 +3,14 @@ import { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from 'react-router-dom';
 import { CaughtCard } from '../components/CaughtCard';
-import { Modal } from "../components/Modal";
-import { transform } from "../context/pokedexContext";
+import { transform } from "../context/pokemonContext";
 import { UserContext } from '../context/userContext';
 import { fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
-
+import { TradeModal } from '../components/TradeModal';
 /**
- * @argument {import("../context/pokedexContext").Pokemon[]} pokemonCaught
- * @returns {{quantity:number, pokemon: import("../context/pokedexContext").Pokemon}[]}
+ * @argument {import("../context/pokemonContext").Pokemon[]} pokemonCaught
+ * @returns {{quantity:number, pokemon: import("../context/pokemonContext").Pokemon}[]}
  */
 function groupPokemonById(pokemonCaught) {
   const pokemonWithQuantity = new Map();
@@ -29,9 +28,9 @@ function groupPokemonById(pokemonCaught) {
 
 export function User() {
   let { id } = useParams();
-  const [tradingPokemon, setTradingPokemon] = useState('');
+  const [tradingPokemon, setTradingPokemon] = useState(null);
   const { users, currentUser } = useContext(UserContext);
-  const isCurrentUser = id === currentUser.id;
+  const isCurrentUser = Number(id) === currentUser.id;
   const { data, isLoading, isSuccess } = useQuery(['pokemonCaughtForUser'],
     () => fetchWithAuth(`${apiUrl()}/pokemon/caught/${id}`).then(r => r.json()), { enabled: !!id });
   const user = users.find(u => u.id === +id);
@@ -46,15 +45,13 @@ export function User() {
           <div className="row user-caught-pokemon" key={p.id}>
             <span>{p.quantity}x</span>
             <CaughtCard pokemon={p} />
-            <span title="Trade" onClick={() => setTradingPokemon(p.name)}>
+            <span title="Trade" onClick={() => setTradingPokemon(p)}>
               {!isCurrentUser && <RefreshCircular className="cursor-pointer" />}
             </span>
           </div>
         )}
       </div>
-      <Modal show={tradingPokemon} title={"Trading " + tradingPokemon} close={() => setTradingPokemon(null)}>
-        <h1>I am the modal</h1>
-      </Modal>
+      <TradeModal tradingPokemon={tradingPokemon} close={() => setTradingPokemon(null)} />
     </>;
   }
 }

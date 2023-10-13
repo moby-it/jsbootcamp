@@ -1,0 +1,30 @@
+import { useContext, useState } from "react";
+import Select from 'react-select';
+import { PokemonContext } from "../context/pokemonContext";
+import { Modal } from "./Modal";
+import { PokeCard } from "./PokeCard";
+export function TradeModal({ tradingPokemon, close }) {
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const { pokemonCaught } = useContext(PokemonContext);
+  return <Modal show={!!tradingPokemon}
+    title={"Trading " + tradingPokemon?.name}
+    close={() => {
+      setSelectedPokemon(null);
+      close();
+    }}>
+    <div className="col align-center gap-1">
+      <Select
+        onChange={(p) => setSelectedPokemon(p)}
+        options={pokemonCaught.map(p => ({ ...p, label: p.name }))}
+        styles={{ control: (styles) => ({ ...styles, width: '400px' }) }}
+        isClearable={true}
+        placeholder="Select a Pokemon to Trade"
+      />
+      <div className="row p-2 gap-1">
+        <PokeCard  {...selectedPokemon} emptyContent="Select a pokemon to trade" />
+        <PokeCard {...tradingPokemon} />
+      </div>
+      {selectedPokemon && <button className="btn">Submit</button>}
+    </div>
+  </Modal >;
+}

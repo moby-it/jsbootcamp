@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { decodeJwt, fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
-import { PokedexContext } from "./pokedexContext";
-import { transform } from "./pokedexContext";
+import { PokemonContext } from "./pokemonContext";
+import { transform } from "./pokemonContext";
 
 /**
  * @typedef {Object} User
@@ -39,7 +39,7 @@ export const UserContext = createContext(null);
 function useUsers() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState();
-  const { fetchPokemonCaught, setPokemonCaught, dailyPokemonQuery, setDailyPokemon } = useContext(PokedexContext);
+  const { fetchPokemonCaught, setPokemonCaught, dailyPokemonQuery, setDailyPokemon } = useContext(PokemonContext);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {

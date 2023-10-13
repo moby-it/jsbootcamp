@@ -179,3 +179,13 @@
 .pr-3 {
   padding-right: 3rem;
 }
+
+.gap-1 {
+  gap: 1rem;
+}
+.gap-2 {
+  gap: 2rem;
+}
+.gap-3 {
+  gap: 3rem;
+}

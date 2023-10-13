@@ -2,17 +2,17 @@ import {
   QueryClient,
   QueryClientProvider
 } from 'react-query';
-import { PokedexProvider } from './context/pokedexContext';
+import { PokemonProvider } from './context/pokemonContext';
 import { UserProvider } from './context/userContext';
 
 export function AppProviders({ children }) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false, enabled: false } } });
 
   return <QueryClientProvider client={queryClient}>
-    <PokedexProvider>
+    <PokemonProvider>
       <UserProvider>
         {children}
       </UserProvider>
-    </PokedexProvider >
+    </PokemonProvider >
   </QueryClientProvider>;
 }
