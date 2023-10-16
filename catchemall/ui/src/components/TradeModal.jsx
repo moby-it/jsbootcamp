@@ -14,8 +14,8 @@ export function TradeModal({ tradingPokemon, close }) {
     }}>
     <div className="col align-center gap-1">
       <Select
-        onChange={(p) => setSelectedPokemon(p)}
-        options={pokemonCaught.map(p => ({ ...p, label: p.name }))}
+        onChange={(e) => setSelectedPokemon(e.value)}
+        options={pokemonCaught.map(p => ({ label: p.name, value: p }))}
         styles={{ control: (styles) => ({ ...styles, width: '400px' }) }}
         isClearable={true}
         placeholder="Select a Pokemon to Trade"
