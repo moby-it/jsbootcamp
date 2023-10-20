@@ -1,3 +1,4 @@
+BEGIN;
 ALTER TABLE user_pokemon
 DROP CONSTRAINT fk_user;
 
@@ -15,3 +16,4 @@ ADD CONSTRAINT fk_user
 FOREIGN KEY (user_id)
 REFERENCES "user"(ID)
 ON DELETE CASCADE;
+COMMIT;
