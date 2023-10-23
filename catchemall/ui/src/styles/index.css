@@ -1,20 +1,16 @@
 body {
-  display: flex;
-  flex-direction: column;
   max-height: 100vh;
-  padding: 1rem 2rem;
-  gap: 2rem;
-
   background: linear-gradient(90deg, rgba(2, 0, 36, 0.5) 0%, rgba(9, 9, 121, 0.6) 35%, rgba(0, 113, 136, 0.8) 50%);
-  margin: auto;
 }
 
 #root {
+  max-width: 1400px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  padding: 0 2rem;
+  padding: 1rem 2rem;
+  margin: auto;
 }
 
 .header a {
