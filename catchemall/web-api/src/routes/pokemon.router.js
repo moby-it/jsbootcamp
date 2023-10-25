@@ -4,6 +4,7 @@ import { getDailyPokemonForUser } from '../db/dailyPokemon.store.js';
 import { catchPokemon, getPokemonCaughtForUser } from '../db/userPokemon.store.js';
 import { validateToken } from '../middleware/auth.middleware.js';
 import { attemptCatch } from '../utils/pokemon.utils.js';
+import { getInitiatedTradesForUserId, getRequestedTradesForUserId } from '../db/tradePokemon.store.js';
 /**
  * @typedef {Object} Pokemon
  * @property {string} id - Pokemon pokedex id
@@ -43,4 +44,20 @@ pokemonRouter.get("/daily", async (req, res) => {
   const response = await getDailyPokemonForUser(user.id);
   if (response.error) return res.sendStatus(500);
   return res.send(response.data);
+});
+
+pokemonRouter.get("pendingTrades", async (req, res) => {
+  const user = res.locals.user;
+  let pendingTrades = [];
+  let response = await getInitiatedTradesForUserId(user.id);
+  if (response.error) return res.sendStatus(500);
+  pendingTrades.push(...response.data);
+  response = await getRequestedTradesForUserId(user.id);
+  if (response.error) return res.sendStatus(500);
+  pendingTrades.push(...response.data);
+  return res.send(pendingTrades);
+});
+
+pokemonRouter.post("trade", async (req, res) => {
+
 });
