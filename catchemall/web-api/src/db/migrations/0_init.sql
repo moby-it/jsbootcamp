@@ -1,33 +1,33 @@
-begin;
+BEGIN;
 
-create table if not exists "user" (
+CREATE TABLE IF NOT EXISTS "user" (
   ID SERIAL PRIMARY KEY,
-  Username varchar(50) NOT NULL UNIQUE,
-  Password varchar(255) NOT NULL,
-  Salt varchar(50) NOT NULL
+  Username VARCHAR(50) NOT NULL UNIQUE,
+  Password VARCHAR(255) NOT NULL,
+  Salt VARCHAR(50) NOT NULL
 );
 
-create table if not exists "pokemon" (
+CREATE TABLE IF NOT EXISTS "pokemon" (
   pokedex_id INT PRIMARY KEY,
-  name varchar(50) NOT NULL,
+  name VARCHAR(50) NOT NULL,
   image_url text NOT NULL,
-  types json NOT NULL
+  types JSON NOT NULL
 );
 
-create table if not exists "user_pokemon" (
+CREATE TABLE IF NOT EXISTS "user_pokemon" (
   ID SERIAL PRIMARY KEY,
-  pokedex_id int NOT NULL,
-  user_id int NOT NULL,
-  constraint fk_user FOREIGN KEY (user_id) references "user"(ID),
-  constraint fk_pokemon FOREIGN KEY (pokedex_id) references "pokemon"(pokedex_id)
+  pokedex_id INT NOT NULL,
+  user_id INT NOT NULL,
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(ID),
+  CONSTRAINT fk_pokemon FOREIGN KEY (pokedex_id) REFERENCES "pokemon"(pokedex_id)
 );
 
-create table if not exists "daily_pokemon" (
+CREATE TABLE IF NOT EXISTS "daily_pokemon" (
   ID SERIAL PRIMARY KEY,
   pokedex_id SMALLINT NOT NULL,
-  user_id int NOT NULL,
-  constraint fk_pokemon FOREIGN KEY (pokedex_id) references "pokemon"(pokedex_id),
-  constraint fk_user FOREIGN KEY (user_id) references "user"(ID)
+  user_id INT NOT NULL,
+  CONSTRAINT fk_pokemon FOREIGN KEY (pokedex_id) REFERENCES "pokemon"(pokedex_id),
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(ID)
 );
 
-commit;
+COMMIT;
