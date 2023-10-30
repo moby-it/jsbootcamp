@@ -1,21 +1,24 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../context/userContext";
+import { useLogin } from "../hooks";
 export function Login() {
 
   const navigate = useNavigate();
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
   const [error, SetError] = useState('');
-  const { login } = useContext(UserContext);
+  const login = useLogin();
 
-  async function submit(e) {
+  if (login.error) {
+    navigate('/');
+    SetError(login.error);
+    navigate('/');
+
+  }
+  function submit(e) {
     SetError('');
     e.preventDefault();
-    const r = await login(username, password);
-    if (r) { SetError(r.error); } else {
-      navigate('/');
-    }
+    login.mutate({ username, password });
   }
 
   return <div className='mt-2 card'>

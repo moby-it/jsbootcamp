@@ -1,11 +1,10 @@
-import { useContext } from "react";
-import { PokemonContext } from "../context/pokemonContext";
+import { useCatchPokemon } from "../hooks";
 import { PokeCard } from "./PokeCard";
 
 export function CaughtPokemonPokeCard(props) {
-  const { catchPokemon } = useContext(PokemonContext);
+  const catchPokemonMutation = useCatchPokemon();
   function onCatchPokemon({ id, name, types, imageUrl }) {
-    catchPokemon({ id, name, types, imageUrl });
+    catchPokemonMutation({ id, name, types, imageUrl });
   }
   return <div className="daily-pokemon">
     <PokeCard {...props} />

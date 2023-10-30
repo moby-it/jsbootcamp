@@ -1,9 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { decodeJwt, fetchWithAuth } from "../utils/auth.helpers";
-import { apiUrl } from "../utils/config";
-import { PokemonContext } from "./pokemonContext";
-import { transform } from "./pokemonContext";
+import { useDailyPokemon, useFetchUsers, usePokemonCaught } from "../hooks";
+import { decodeJwt } from "../utils/auth.helpers";
+import { PokemonContext, transform } from "./pokemonContext";
 
 /**
  * @typedef {Object} User
@@ -21,10 +19,7 @@ import { transform } from "./pokemonContext";
  * @property {(boolean)=>void} setIsLoading
  * @property {boolean} isLoading
  * @property {(string)=> void} setToken
- * @property {(username,password)=> Promise<boolean>} register
- * @property {(username,password)=> Promise<boolean>} login
  * @property {()=> void} logout
- * 
  */
 
 
@@ -39,9 +34,13 @@ export const UserContext = createContext(null);
 function useUsers() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState();
-  const { fetchPokemonCaught, setPokemonCaught, dailyPokemonQuery, setDailyPokemon } = useContext(PokemonContext);
+  const { setPokemonCaught, setDailyPokemon } = useContext(PokemonContext);
+  const pokemonCaughtQuery = usePokemonCaught();
+  const dailyPokemonQuery = useDailyPokemon();
+  const fetchUsersQuery = useFetchUsers();
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     if (!token) {
       setIsLoading(false);
@@ -52,7 +51,7 @@ function useUsers() {
     setIsLoading(true);
     localStorage.setItem('token', token);
     Promise.all([
-      fetchPokemonCaught(),
+      pokemonCaughtQuery.refetch(),
       fetchUsersQuery.refetch(),
       dailyPokemonQuery.refetch()
     ]).then(([pokemonCaught, users, dailyPokemon]) => {
@@ -64,40 +63,6 @@ function useUsers() {
       setIsLoading(false);
     });
   }, [token]);
-  /**
- * 
- * @param {string} username 
- * @param {string} password 
- * @returns {string} user token
- */
-  async function register(username, password) {
-    const r = await fetch(`${apiUrl()}/auth/register`, {
-      body: JSON.stringify({ username, password }), method: 'POST', headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (r.ok) {
-      const { token } = await r.json();
-      setIsLoading(true);
-      setToken(token);
-    } else {
-      return await r.json();
-    }
-  }
-  async function login(username, password) {
-    const r = await fetch(`${apiUrl()}/auth/login`, {
-      body: JSON.stringify({ username, password }), method: 'POST', headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (r.ok) {
-      const { token } = await r.json();
-      setIsLoading(true);
-      setToken(token);
-    } else {
-      return await r.json();
-    }
-  }
 
   function logout() {
     localStorage.removeItem('token');
@@ -105,8 +70,6 @@ function useUsers() {
     setUsers([]);
     setToken();
   }
-  const fetchUsersQuery = useQuery('fetchUsers', () => fetchUsers());
-
   return {
     users,
     currentUser,
@@ -114,24 +77,11 @@ function useUsers() {
     isLoading,
     setIsLoading,
     setToken,
-    register,
-    login,
     logout
   };
 }
 
-/**
- * @returns {Promise<Array<User> | null>}
- */
-async function fetchUsers() {
-  try {
-    const users = await fetchWithAuth(`${apiUrl()}/users`).then(r => r.json());
-    return users;
-  } catch (e) {
-    console.log('failed to fetch users', e);
-    return null;
-  }
-}
+
 export function UserProvider({ children }) {
   const r = useUsers();
   return <UserContext.Provider value={r}>

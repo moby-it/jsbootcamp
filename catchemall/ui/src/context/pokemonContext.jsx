@@ -1,22 +1,4 @@
 import { createContext, useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import { fetchWithAuth } from "../utils/auth.helpers";
-import { apiUrl } from "../utils/config";
-
-/**
- * 
- * @param {Pokemon} lastPokemonCaught 
- * @returns 
- */
-function postPokemonCaught(lastPokemonCaught) {
-  return fetchWithAuth(`${apiUrl()}/pokemon/catch/${lastPokemonCaught.id}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: 'POST',
-    body: JSON.stringify(lastPokemonCaught)
-  }).then(r => r.json());
-}
 
 /**
  * @typedef {Object} Pokemon
@@ -40,9 +22,6 @@ function postPokemonCaught(lastPokemonCaught) {
  * @property {Array<DailyPokemon>} dailyPokemon
  * @property {(Array<Pokemon>) =>void} setPokemonCaught
  * @property {(Array<DailyPokemon>) =>void} setDailyPokemon
- * @property {(pokemon:Pokemon) => Promise<void>} catchPokemon
- * @property {import("react-query").UseQueryResult} dailyPokemonQuery
- * 
  */
 
 /**
@@ -54,54 +33,22 @@ function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState([]);
   const [dailyPokemon, setDailyPokemon] = useState([]);
 
-  const pokemonCaughtQuery = useQuery('pokemonCaught', () => {
-    return fetchWithAuth(`${apiUrl()}/pokemon/caught`).then(r => r.json());
-  });
-
-  const dailyPokemonQuery = useQuery('dailyPokemon', () => {
-    return fetchWithAuth(`${apiUrl()}/pokemon/daily`).then(r => r.json());
-  });
-
-  const { mutateAsync, isError, data } = useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
-    ({ caught }) => {
-      if (caught) {
-        setPokemonCaught([...pokemonCaught, pokemon]);
-      }
-      setDailyPokemon(dailyPokemon.map(dp => dp.id === pokemon.id ? { ...dp, caught } : dp));
-    }
-  ));
-
-  /**
-   * 
-   * @param {Pokemon} pokemon 
-   * @returns {boolean}
-   */
-  async function catchPokemon(pokemon) {
-    await mutateAsync(pokemon);
-    if (isError) return false;
-    console.log('tried to catch', pokemon.name);
-    console.log('result', data);
-    return;
-  }
-
   return {
     pokemonCaught,
     dailyPokemon,
-    fetchPokemonCaught: pokemonCaughtQuery.refetch,
-    catchPokemon,
     setPokemonCaught,
     setDailyPokemon,
-    dailyPokemonQuery
   };
 }
 
 /**
  * @description takes as input an pokemon as return from the api and transforms it to what the ui needs
- * @param {{name:string, pokedex_id: number,types:string[], image_url:string,caught:boolean}} p 
+ * @param {{id:number,:string, pokedex_id: number,types:string[], image_url:string,caught:boolean}} p 
  * @returns {import("./pokemonContext").Pokemon}
  */
 export function transform(p) {
   return {
+    userPokemonId: p.id,
     name: p.name, id: p.pokedex_id, types: p.types, imageUrl: p.image_url, caught: p.caught
   };
 }

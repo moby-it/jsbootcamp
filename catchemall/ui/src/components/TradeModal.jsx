@@ -3,9 +3,12 @@ import Select from 'react-select';
 import { PokemonContext } from "../context/pokemonContext";
 import { Modal } from "./Modal";
 import { PokeCard } from "./PokeCard";
+import { useSaveTrade } from "../hooks/useSaveTrade";
 export function TradeModal({ tradingPokemon, close }) {
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   const { pokemonCaught } = useContext(PokemonContext);
+  const { saveTrade } = useSaveTrade();
+  
   return <Modal show={!!tradingPokemon}
     title={"Trading " + tradingPokemon?.name}
     close={() => {
@@ -24,7 +27,8 @@ export function TradeModal({ tradingPokemon, close }) {
         <PokeCard  {...selectedPokemon} emptyContent="Select a pokemon to trade" />
         <PokeCard {...tradingPokemon} />
       </div>
-      {selectedPokemon && <button className="btn">Submit</button>}
+      {selectedPokemon && <button className="btn" onClick={() => saveTrade(selectedPokemon.userPokemonId, tradingPokemon.userPokemonId)
+      }>Submit</button>}
     </div>
   </Modal >;
 }
