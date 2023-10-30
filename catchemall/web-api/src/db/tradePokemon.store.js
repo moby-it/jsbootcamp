@@ -20,13 +20,13 @@ INNER JOIN public.pokemon pr ON pr.pokedex_id = upr.pokedex_id`;
 /**
  * 
  * @param {number} initiationUserPokemonId 
- * @param {number} receiverUserPokemonId 
+ * @param {number} responderUserPokemonId 
  * @returns {Promise<import("./db.js").Result>}
  */
-export async function saveTrade(initiationUserPokemonId, receiverUserPokemonId) {
+export async function saveTrade(initiationUserPokemonId, responderUserPokemonId) {
   const res = await runQuery(`
-  INSERT INTO ${TABLE_NAME} (initiator_user_pokemon_id,receiver_user_pokemon_id)
-  VALUES ($1,$2)`, [initiationUserPokemonId, receiverUserPokemonId]);
+  INSERT INTO ${TABLE_NAME} (initiator_user_pokemon_id, responder_user_pokemon_id)
+  VALUES ($1,$2)`, [initiationUserPokemonId, responderUserPokemonId]);
   return res;
 }
 
@@ -37,9 +37,12 @@ export async function saveTrade(initiationUserPokemonId, receiverUserPokemonId) 
  * @returns {Promise<import("./db.js").Result>}
  */
 export async function changeTradeStatus(tradeId, accepted) {
-  const res = await runQuery(`
+  let res = await runQuery(`
     UPDATE ${TABLE_NAME} SET accepted=$1 WHERE id=$2;
   `, [accepted, tradeId]);
+  if (accepted) {
+    res = await runQuery(`call swap_pokemon($1)`, [tradeId]);
+  }
   return res;
 }
 

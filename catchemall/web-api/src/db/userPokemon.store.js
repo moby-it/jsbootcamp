@@ -5,7 +5,7 @@ const TABLE_NAME = 'user_pokemon';
 
 export async function getPokemonCaughtForUser(userId) {
   const query = `
-  select p.pokedex_id,name,image_url,types from ${TABLE_NAME}
+  select id, p.pokedex_id,name,image_url,types from ${TABLE_NAME}
   inner join public.pokemon p on p.pokedex_id = user_pokemon.pokedex_id
   where user_id = $1`;
   const res = await runQuery(query, [userId]);
