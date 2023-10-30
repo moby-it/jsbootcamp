@@ -8,8 +8,8 @@ services:
     ports:
       - 4200:80
     depends_on: 
-      - api
-  api:
+      - web-api
+  web-api:
     build:
       context: web-api
     env_file:
