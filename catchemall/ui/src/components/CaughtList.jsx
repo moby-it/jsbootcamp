@@ -1,11 +1,11 @@
-import { useContext } from "react";
-import { PokemonContext } from "../context/pokemonContext";
+import { transform } from "../utils/transformPokemon";
+import { usePokemonCaught } from "../hooks";
 import { CaughtCard } from "./CaughtCard";
 
 export function CaughtList() {
-  const { pokemonCaught } = useContext(PokemonContext);
+  const query = usePokemonCaught();
   return <div className="caught-list">
-    {pokemonCaught.map((pokemon, index) =>
-      <CaughtCard pokemon={pokemon} key={`${pokemon.id}_${index}`} />)}
+    {!query.isSuccess? [] : query.data.map(transform).map((pokemon, index) =>
+      <CaughtCard pokemon={pokemon} key={`${pokemon.id}_${index}_${pokemon.caught}`} />)}
   </div>;
 }

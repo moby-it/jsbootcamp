@@ -1,0 +1,51 @@
+.user-data {
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.user {
+  text-align: center;
+}
+
+.user h3 {
+  font-style: italic;
+}
+
+.pending-trades {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 600px;
+}
+
+.pending-trade .pending-trade p {
+  display: flex;
+  align-items: center;
+}
+
+.pending-trade div[role='group'] {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pokemon-to-trade p {
+  display: flex;
+  align-items: center;
+}
+
+.pokemon-to-trade p {
+  display: flex;
+  align-items: center;
+}
+[data-owned=true] {
+  color: lightgreen;
+}
+
+.pending-trade {
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(173, 216, 230, 0.3);
+}

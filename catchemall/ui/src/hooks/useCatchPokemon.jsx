@@ -1,8 +1,8 @@
-import { useContext } from "react";
-import { PokemonContext } from "../context/pokemonContext";
 import { useMutation } from "react-query";
 import { fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
+import { useDailyPokemon } from "./useDailyPokemon";
+import { usePokemonCaught } from "./usePokemonCaught";
 
 function postPokemonCaught(lastPokemonCaught) {
   return fetchWithAuth(`${apiUrl()}/pokemon/catch/${lastPokemonCaught.id}`, {
@@ -16,13 +16,14 @@ function postPokemonCaught(lastPokemonCaught) {
 
 
 export function useCatchPokemon() {
-  const { setDailyPokemon, setPokemonCaught, dailyPokemon, pokemonCaught } = useContext(PokemonContext);
+  const pokemonCaught = usePokemonCaught();
+  const dailyPokemon = useDailyPokemon();
   return useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
     ({ caught }) => {
       if (caught) {
-        setPokemonCaught([...pokemonCaught, pokemon]);
+        pokemonCaught.refetch();
       }
-      setDailyPokemon(dailyPokemon.map(dp => dp.id === pokemon.id ? { ...dp, caught } : dp));
+      dailyPokemon.refetch();
     }
   ));
 }

@@ -15,7 +15,7 @@ export function Register() {
 
   function submit(e) {
     e.preventDefault();
-    register({ username, password });
+    register.mutate({ username, password });
   }
 
   return <div className='mt-2 card'>

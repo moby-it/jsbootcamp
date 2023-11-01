@@ -1,10 +1,9 @@
-import { useQuery } from "react-query";
-import { apiUrl } from "../utils/config";
-import { fetchWithAuth } from "../utils/auth.helpers";
+import { useContext } from "react";
+import { UserContext } from '../context/userContext';
+import { usePokemonCaughtForUser } from '../hooks';
 
 export function usePokemonCaught() {
-  const query = useQuery('pokemonCaught', () => {
-    return fetchWithAuth(`${apiUrl()}/pokemon/caught`).then(r => r.json());
-  });
+  const { currentUser } = useContext(UserContext);
+  const query = usePokemonCaughtForUser(currentUser.id);
   return query;
 }

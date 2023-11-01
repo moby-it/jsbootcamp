@@ -27,12 +27,7 @@ pokemonRouter.post("/catch/:id", async (req, res) => {
   if (response.error) return res.status(500).send(response.error);
   return res.send({ caught });
 });
-pokemonRouter.get("/caught", async (req, res) => {
-  const user = res.locals.user;
-  const response = await getPokemonCaughtForUser(user.id);
-  if (response.error) return res.sendStatus(500);
-  return res.send(response.data);
-});
+
 pokemonRouter.get("/caught/:id", async (req, res) => {
   const userId = req.params.id;
   const response = await getPokemonCaughtForUser(userId);

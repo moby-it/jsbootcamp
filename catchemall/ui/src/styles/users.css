@@ -22,3 +22,9 @@
   transform: scale(1.02);
   background-color: rgba(219, 219, 219, 0.8)
 }
+.user-list>.card:first-child {
+  margin-bottom: 1rem;
+}
+.card.current-user {
+  border: 3px solid green;
+}
