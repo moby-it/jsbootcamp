@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { Toaster } from 'react-hot-toast';
 import { AppProviders } from './providers';
 import "./styles/button.css";
 import "./styles/card.css";
@@ -17,7 +18,12 @@ import "./styles/pages/login.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <AppProviders>
-    <App />
-  </AppProviders>
+  <>
+    <AppProviders>
+      <App />
+    </AppProviders>
+    <Toaster
+      position="top-right"
+    />
+  </>
 );

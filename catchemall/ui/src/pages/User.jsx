@@ -3,11 +3,11 @@ import { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from 'react-router-dom';
 import { CaughtCard } from '../components/CaughtCard';
+import { TradeModal } from '../components/TradeModal';
 import { transform } from "../context/pokemonContext";
 import { UserContext } from '../context/userContext';
 import { fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
-import { TradeModal } from '../components/TradeModal';
 /**
  * @argument {import("../context/pokemonContext").Pokemon[]} pokemonCaught
  * @returns {{quantity:number, pokemon: import("../context/pokemonContext").Pokemon}[]}
@@ -29,6 +29,7 @@ function groupPokemonById(pokemonCaught) {
 export function User() {
   let { id } = useParams();
   const [tradingPokemon, setTradingPokemon] = useState(null);
+
   const { users, currentUser } = useContext(UserContext);
   const isCurrentUser = Number(id) === currentUser.id;
   const { data, isLoading, isSuccess } = useQuery(['pokemonCaughtForUser'],
@@ -51,7 +52,7 @@ export function User() {
           </div>
         )}
       </div>
-      <TradeModal tradingPokemon={tradingPokemon} close={() => setTradingPokemon(null)} />
+      {!!tradingPokemon && <TradeModal tradingPokemon={tradingPokemon} close={() => setTradingPokemon(null)} />}
     </>;
   }
 }

@@ -32,7 +32,6 @@ export const PokemonContext = createContext(null);
 function usePokedex() {
   const [pokemonCaught, setPokemonCaught] = useState([]);
   const [dailyPokemon, setDailyPokemon] = useState([]);
-
   return {
     pokemonCaught,
     dailyPokemon,
