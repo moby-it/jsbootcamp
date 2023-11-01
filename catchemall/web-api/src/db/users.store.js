@@ -67,6 +67,6 @@ export async function getUserByUsername(username) {
 export async function verifyUser(username, password) {
   const res = await getUserByUsername(username);
   const user = res.data;
-  if (!user) return 'users does not exists';
+  if (!user) return 'user does not exist';
   return await compare(password, user.password) ? user : 'Incorrect Password';
 }

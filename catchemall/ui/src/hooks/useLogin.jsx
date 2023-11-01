@@ -11,7 +11,11 @@ export function useLogin() {
     },
     method: 'POST',
     body: JSON.stringify({ username, password })
-  }).then(r => r.json()));
+  }).then(async r => {
+    const response = await r.json();
+    if (r.ok) return response;
+    throw response;
+  }));
   useEffect(() => {
     if (mutation.isSuccess) {
       setIsLoading(true);

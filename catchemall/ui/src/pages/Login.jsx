@@ -1,22 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLogin } from "../hooks";
 export function Login() {
 
-  const navigate = useNavigate();
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
   const [error, SetError] = useState('');
   const login = useLogin();
 
-  if (login.error) {
-    navigate('/');
-    SetError(login.error);
-    navigate('/');
-
+  if (login.isError) {
+    SetError(login.error.error);
+    login.reset();
   }
   function submit(e) {
-    SetError('');
     e.preventDefault();
     login.mutate({ username, password });
   }
