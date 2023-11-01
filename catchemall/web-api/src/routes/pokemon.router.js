@@ -4,6 +4,7 @@ import { getDailyPokemonForUser } from '../db/dailyPokemon.store.js';
 import { catchPokemon, getPokemonCaughtForUser } from '../db/userPokemon.store.js';
 import { validateToken } from '../middleware/auth.middleware.js';
 import { attemptCatch } from '../utils/pokemon.utils.js';
+import { changeTradeStatus, getInitiatedTradesForUserId, getRequestedTradesForUserId, saveTrade } from '../db/tradePokemon.store.js';
 /**
  * @typedef {Object} Pokemon
  * @property {string} id - Pokemon pokedex id
@@ -43,4 +44,34 @@ pokemonRouter.get("/daily", async (req, res) => {
   const response = await getDailyPokemonForUser(user.id);
   if (response.error) return res.sendStatus(500);
   return res.send(response.data);
+});
+
+pokemonRouter.get("/trade", async (req, res) => {
+  const user = res.locals.user;
+  let pendingTrades = [];
+  let response = await getInitiatedTradesForUserId(user.id);
+  if (response.error) return res.sendStatus(500);
+  pendingTrades.push(...response.data);
+  response = await getRequestedTradesForUserId(user.id);
+  if (response.error) return res.sendStatus(500);
+  pendingTrades.push(...response.data);
+  return res.send(pendingTrades);
+});
+
+pokemonRouter.post("/trade", async (req, res) => {
+  const { initiatorUserPokemonId, responderUserPokemonId } = req.body;
+  if (!initiatorUserPokemonId || !responderUserPokemonId) return res.sendStatus(400);
+  const response = await saveTrade(initiatorUserPokemonId, responderUserPokemonId);
+  if (response.error) {
+    console.error(response.error);
+    return res.sendStatus(500);
+  }
+  return res.sendStatus(201);
+});
+pokemonRouter.put("/trade", async (req, res) => {
+  const { tradeId, accepted } = req.body;
+  if (!tradeId || typeof accepted !== 'boolean') return res.sendStatus(400);
+  const response = await changeTradeStatus(tradeId, accepted);
+  if (response.error) return res.sendStatus(500);
+  return res.sendStatus(200);
 });

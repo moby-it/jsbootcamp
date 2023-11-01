@@ -3,9 +3,11 @@ import { useContext } from 'react';
 import { CaughtPokemonPokeCard } from '../components/CatchPokemonCard';
 import { CaughtList } from '../components/CaughtList';
 import { PokemonContext } from '../context/pokemonContext';
+import { useDailyPokemon } from '../hooks';
 
 export function DailyPokemon() {
-  const { dailyPokemonQuery, dailyPokemon } = useContext(PokemonContext);
+  const dailyPokemonQuery = useDailyPokemon();
+  const { dailyPokemon } = useContext(PokemonContext);
   if (dailyPokemonQuery.isFetching) return <h2>Loading...</h2>;
   if (dailyPokemonQuery.error) return <h2>Error</h2>;
   return <>
