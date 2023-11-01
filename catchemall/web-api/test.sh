@@ -1,1 +1,1 @@
-docker compose -f docker-compose.test.yml up --build --exit-code-from api
+docker compose -f docker-compose.test.yml up --force-recreate --build --exit-code-from api

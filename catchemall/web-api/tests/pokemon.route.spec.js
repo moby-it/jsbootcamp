@@ -17,7 +17,6 @@ describe('Pokemon Router Test', () => {
       const user = { username: "manolis", password: "olamis" };
       await request(app).post('/auth/register').send(user).expect(200).expect(response => {
         const { token } = response.body;
-        console.log(token);
         const r = jwt.verify(token, getJwtSecret());
         userId = r['id'];
       });
