@@ -37,3 +37,4 @@ BEGIN
             AND pokemon_trade.id != pokemon_trade_id;
 END;
 $$;
+COMMIT;

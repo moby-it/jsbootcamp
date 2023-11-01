@@ -25,8 +25,9 @@ export async function createDbPool() {
   const poolConfig = {
     connectionString,
   };
-  console.log('ENV IS', process.env['ENV']);
-  if (process.env['ENV'] === 'PROD') {
+  const env = process.env['ENV'] || 'DEV';
+  console.log('ENV IS', env);
+  if (env === 'PROD') {
     poolConfig.ssl = {
       rejectUnauthorized: false,
     };
