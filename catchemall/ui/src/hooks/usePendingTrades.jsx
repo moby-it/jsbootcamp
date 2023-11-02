@@ -8,5 +8,5 @@ export function usePendingTrades() {
       if (!r.ok) throw await r.text();
       return r.json();
     });
-  }, { enabled: true });
+  });
 }

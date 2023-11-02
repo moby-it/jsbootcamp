@@ -18,12 +18,12 @@ function postPokemonCaught(lastPokemonCaught) {
 export function useCatchPokemon() {
   const pokemonCaught = usePokemonCaught();
   const dailyPokemon = useDailyPokemon();
-  return useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon).then(
-    ({ caught }) => {
+  return useMutation('savePokemon', (pokemon) => postPokemonCaught(pokemon), {
+    onSuccess: ({ caught }) => {
       if (caught) {
         pokemonCaught.refetch();
       }
       dailyPokemon.refetch();
     }
-  ));
+  });
 }

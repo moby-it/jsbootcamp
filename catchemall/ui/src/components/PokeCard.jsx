@@ -2,7 +2,7 @@ import { CaughtIcon } from './CaughtIcon';
 
 /**
  * 
- * @param {import('../context/pokemonContext').DailyPokemon & {emptyContent:string}} props 
+ * @param {import('../utils/transformPokemon').DailyPokemon & {emptyContent:string}} props 
  * @returns 
  */
 export function PokeCard(props) {

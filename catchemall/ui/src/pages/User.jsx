@@ -30,19 +30,20 @@ export function User() {
   let { id } = useParams();
   const [tradingPokemon, setTradingPokemon] = useState(null);
   const query = usePokemonCaughtForUser(id);
+  const { users, currentUser } = useContext(UserContext);
+  const isCurrentUser = Number(id) === currentUser.id;
   useEffect(() => {
-    if (isCurrentUser)
+    if (isCurrentUser) {
       window.addEventListener('app:trade:accepted', tradeAccepted);
+    }
     return () => {
       window.removeEventListener('app:trade:accepted', tradeAccepted);
     };
-  }, []);
+  }, [isCurrentUser]);
 
   function tradeAccepted() {
-    query.refetch(id);
+    query.refetch();
   }
-  const { users, currentUser } = useContext(UserContext);
-  const isCurrentUser = Number(id) === currentUser.id;
   const user = users.find(u => u.id === +id);
   if (!id) return <h1>Where are you going?</h1>;
   if (query.isSuccess) {
