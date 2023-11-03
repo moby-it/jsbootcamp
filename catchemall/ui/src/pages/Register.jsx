@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRegister } from "../hooks";
 
 export function Register() {
-  const navigate = useNavigate();
   const [username, SetUsername] = useState('');
   const [password, SetPassword] = useState('');
   const [error, SetError] = useState('');
@@ -11,14 +10,12 @@ export function Register() {
 
   if (register.error) {
     SetError(register.error);
-    navigate('/');
+    register.reset();
   }
 
   function submit(e) {
-    SetError('');
     e.preventDefault();
-    console.log(username, password);
-    register({ username, password });
+    register.mutate({ username, password });
   }
 
   return <div className='mt-2 card'>

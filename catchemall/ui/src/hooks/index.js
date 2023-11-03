@@ -7,3 +7,5 @@ export * from './usePokemonCaught';
 export * from './useSaveTrade';
 export * from './useLogin';
 export * from './useRegister';
+export * from './useUpdateTrade';
+export * from './usePokemonCaughtForUser';

@@ -1,13 +1,13 @@
 import { RefreshCircular } from 'iconoir-react';
-import { useContext, useState } from "react";
-import { useQuery } from "react-query";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { CaughtCard } from '../components/CaughtCard';
-import { transform } from "../context/pokemonContext";
-import { UserContext } from '../context/userContext';
-import { fetchWithAuth } from "../utils/auth.helpers";
-import { apiUrl } from "../utils/config";
+import { PendingTrades } from '../components/PendingTrades';
 import { TradeModal } from '../components/TradeModal';
+import { transform } from "../utils/transformPokemon";
+import { UserContext } from '../context/userContext';
+import { usePokemonCaughtForUser } from '../hooks/usePokemonCaughtForUser';
+
 /**
  * @argument {import("../context/pokemonContext").Pokemon[]} pokemonCaught
  * @returns {{quantity:number, pokemon: import("../context/pokemonContext").Pokemon}[]}
@@ -29,29 +29,46 @@ function groupPokemonById(pokemonCaught) {
 export function User() {
   let { id } = useParams();
   const [tradingPokemon, setTradingPokemon] = useState(null);
+  const query = usePokemonCaughtForUser(id);
   const { users, currentUser } = useContext(UserContext);
   const isCurrentUser = Number(id) === currentUser.id;
-  const { data, isLoading, isSuccess } = useQuery(['pokemonCaughtForUser'],
-    () => fetchWithAuth(`${apiUrl()}/pokemon/caught/${id}`).then(r => r.json()), { enabled: !!id });
+  useEffect(() => {
+    if (isCurrentUser) {
+      window.addEventListener('app:trade:accepted', tradeAccepted);
+    }
+    return () => {
+      window.removeEventListener('app:trade:accepted', tradeAccepted);
+    };
+  }, [isCurrentUser]);
+
+  function tradeAccepted() {
+    query.refetch();
+  }
   const user = users.find(u => u.id === +id);
   if (!id) return <h1>Where are you going?</h1>;
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isSuccess) {
-    return <>
-      <h2>Username: {user.username}</h2>
-      {!data.length && <span>No pokemon caught</span>}
-      <div className="col gap-1 user-caught-container p-1">
-        {groupPokemonById(data.map(transform)).map(p =>
-          <div className="row user-caught-pokemon" key={p.id}>
-            <span>{p.quantity}x</span>
-            <CaughtCard pokemon={p} />
-            <span title="Trade" onClick={() => setTradingPokemon(p)}>
-              {!isCurrentUser && <RefreshCircular className="cursor-pointer" />}
-            </span>
-          </div>
-        )}
-      </div>
-      <TradeModal tradingPokemon={tradingPokemon} close={() => setTradingPokemon(null)} />
-    </>;
+  if (query.isSuccess) {
+    return <article className="user-data">
+      <article className="user">
+        <h2>Username: {user.username}</h2>
+        <h3>Pokemon Caught</h3>
+        {!query.data.length && <span>No pokemon caught</span>}
+        <div className="col gap-1 user-caught-container p-1">
+          {groupPokemonById(query.data.map(transform)).map(p =>
+            <div className="row user-caught-pokemon" key={p.id}>
+              <span>{p.quantity}x</span>
+              <CaughtCard pokemon={p} />
+              <span title="Trade" onClick={() => setTradingPokemon(p)}>
+                {!isCurrentUser && <RefreshCircular className="cursor-pointer" />}
+              </span>
+            </div>
+          )}
+        </div>
+      </article>
+      {isCurrentUser && <article className="pending-trades">
+        <PendingTrades />
+      </article>}
+
+      {!!tradingPokemon && <TradeModal tradingPokemon={tradingPokemon} close={() => setTradingPokemon(null)} />}
+    </article>;
   }
 }

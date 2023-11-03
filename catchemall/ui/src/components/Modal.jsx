@@ -1,6 +1,5 @@
 import { Cancel } from 'iconoir-react';
-export function Modal({ show, children, title, close }) {
-  if (!show) return;
+export function Modal({ children, title, close }) {
   return <div className="modal">
     <div className="header">
       <span>{title}</span>

@@ -2,13 +2,13 @@ import { runQuery } from "./db.js";
 
 const TABLE_NAME = "pokemon_trade";
 
-const tradesQuery = `
+const tradesQuery = (initiated) => `
 SELECT pokemon_trade.id,
-       upi.pokedex_id AS initiator_pokedex_id,
        pi.name         AS initiator_pokemon_name,
-       pi.image_url    AS initiatior_pokemon_image_url,
+       pi.image_url    AS initiator_pokemon_image_url,
        pr.name AS responder_pokemon_name,
-       pr.image_url AS responder_pokemon_image_url
+       pr.image_url AS responder_pokemon_image_url,
+       ${initiated.toString()} AS initiated
 FROM pokemon_trade
 
 INNER JOIN public.user_pokemon upi ON upi.id = pokemon_trade.initiator_user_pokemon_id
@@ -48,17 +48,20 @@ export async function changeTradeStatus(tradeId, accepted) {
 
 export async function getInitiatedTradesForUserId(userId) {
   const res = await runQuery(`
-  ${tradesQuery}
+  ${tradesQuery(true)}
   INNER JOIN public."user" u ON u.id = upi.user_id
   WHERE u.id = $1 AND accepted IS NULL
 `, [userId]);
-  return res;
+  if (res.error) return res.error;
+  return { data: res.data.rows };
 };
 export async function getRequestedTradesForUserId(userId) {
   const res = await runQuery(`
-  ${tradesQuery}
+  ${tradesQuery(false)}
   INNER JOIN public."user" u ON u.id = upr.user_id
   WHERE u.id = $1 AND accepted IS NULL
 `, [userId]);
-  return res;
+  if (res.error) return res.error;
+
+  return { data: res.data.rows };
 };

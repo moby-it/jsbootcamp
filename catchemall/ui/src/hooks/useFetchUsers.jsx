@@ -3,5 +3,5 @@ import { fetchWithAuth } from "../utils/auth.helpers";
 import { apiUrl } from "../utils/config";
 
 export function useFetchUsers() {
-  return useQuery('fetchUsers', () => fetchWithAuth(`${apiUrl()}/users`).then(r => r.json()));
+  return useQuery('fetchUsers', () => fetchWithAuth(`${apiUrl()}/users`).then(r => r.json()), { staleTime: 30_000 });
 }

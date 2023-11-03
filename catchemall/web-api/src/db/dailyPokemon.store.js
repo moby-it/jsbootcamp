@@ -25,9 +25,10 @@ export async function hasDailyPokemon(userId) {
 
 export async function getDailyPokemonForUser(userId) {
   const query = `
-  select daily_pokemon.pokedex_id,name,image_url,types,caught from daily_pokemon
-    inner join public."pokemon" p on p.pokedex_id = daily_pokemon.pokedex_id
-       where user_id = $1`;
+  SELECT daily_pokemon.pokedex_id,name,image_url,types,caught FROM daily_pokemon
+  INNER JOIN public."pokemon" p ON p.pokedex_id = daily_pokemon.pokedex_id
+  WHERE user_id = $1
+  ORDER BY daily_pokemon.pokedex_id`;
   const res = await runQuery(query, [userId]);
   if (res.error) return res;
   return { data: res.data.rows };

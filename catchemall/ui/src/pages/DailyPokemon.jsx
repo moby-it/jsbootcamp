@@ -1,18 +1,29 @@
 
-import { useContext } from 'react';
 import { CaughtPokemonPokeCard } from '../components/CatchPokemonCard';
 import { CaughtList } from '../components/CaughtList';
-import { PokemonContext } from '../context/pokemonContext';
+import { transform } from "../utils/transformPokemon";
 import { useDailyPokemon } from '../hooks';
+import { useEffect } from 'react';
 
 export function DailyPokemon() {
+
   const dailyPokemonQuery = useDailyPokemon();
-  const { dailyPokemon } = useContext(PokemonContext);
-  if (dailyPokemonQuery.isFetching) return <h2>Loading...</h2>;
-  if (dailyPokemonQuery.error) return <h2>Error</h2>;
+  
+  // at 12AM daily pokemon rotates for every user so we need to refetch
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const isMidnight = Math.abs(midnight.getTime() - now.getTime()) < 1000;
+      if (isMidnight)
+        dailyPokemonQuery.refetch();
+      return () => clearInterval(interval);
+    }, 1000);
+  }, [dailyPokemonQuery]);
+
   return <>
     <div className='pokecard-list'>
-      {dailyPokemon.map((pokemon, index) => <CaughtPokemonPokeCard key={`${pokemon.id}_${index}`} {...pokemon} />)}
+      {!dailyPokemonQuery.isSuccess ? [] : dailyPokemonQuery.data.map(transform).map((pokemon, index) => <CaughtPokemonPokeCard key={`${pokemon.id}_${index}_${pokemon.caught}`} {...pokemon} />)}
     </div>
     <CaughtList />
   </>;
