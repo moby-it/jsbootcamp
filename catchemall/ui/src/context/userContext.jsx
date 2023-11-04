@@ -1,7 +1,7 @@
-import { createContext, useEffect, useState } from "react";
-import { useFetchUsers } from "../hooks";
-import { decodeJwt } from "../utils/auth.helpers";
-import { useQueryClient } from "react-query";
+import { createContext, useEffect, useState } from 'react';
+import { useFetchUsers } from '../hooks';
+import { decodeJwt } from '../utils/auth.helpers';
+import { useQueryClient } from 'react-query';
 
 /**
  * @typedef {Object} User
@@ -22,59 +22,55 @@ import { useQueryClient } from "react-query";
  * @property {()=> void} logout
  */
 
-
 /**
  * @type {React.Context<UserContextValue>}
  */
 export const UserContext = createContext(null);
 /**
- * 
+ *
  * @returns {UserContextValue}
  */
 function useUsers() {
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
-  const fetchUsersQuery = useFetchUsers();
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [isLoading, setIsLoading] = useState(true);
-  const queryClient = useQueryClient();
-  useEffect(() => {
-    if (!token) {
-      setIsLoading(false);
-      setCurrentUser(null);
-      setUsers([]);
-      return;
-    }
-    setIsLoading(true);
-    localStorage.setItem('token', token);
-    const user = decodeJwt(token);
-    setCurrentUser(user);
-    setIsLoading(false);
-    fetchUsersQuery.refetch().then(users => setUsers(users.data));
-  }, [token]);
+    const [users, setUsers] = useState([]);
+    const [currentUser, setCurrentUser] = useState();
+    const fetchUsersQuery = useFetchUsers();
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [isLoading, setIsLoading] = useState(true);
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        if (!token) {
+            setIsLoading(false);
+            setCurrentUser(null);
+            setUsers([]);
+            return;
+        }
+        setIsLoading(true);
+        localStorage.setItem('token', token);
+        const user = decodeJwt(token);
+        setCurrentUser(user);
+        setIsLoading(false);
+        fetchUsersQuery.refetch().then((users) => setUsers(users.data));
+    }, [token]);
 
-  function logout() {
-    localStorage.removeItem('token');
-    setCurrentUser();
-    setUsers([]);
-    setToken();
-    queryClient.clear();
-  }
-  return {
-    users,
-    currentUser,
-    token,
-    isLoading,
-    setIsLoading,
-    setToken,
-    logout
-  };
+    function logout() {
+        localStorage.removeItem('token');
+        setCurrentUser();
+        setUsers([]);
+        setToken();
+        queryClient.clear();
+    }
+    return {
+        users,
+        currentUser,
+        token,
+        isLoading,
+        setIsLoading,
+        setToken,
+        logout,
+    };
 }
 
-
 export function UserProvider({ children }) {
-  const r = useUsers();
-  return <UserContext.Provider value={r}>
-    {children}
-  </UserContext.Provider>;
+    const r = useUsers();
+    return <UserContext.Provider value={r}>{children}</UserContext.Provider>;
 }

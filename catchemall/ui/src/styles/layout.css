@@ -1,40 +1,40 @@
 .row {
-  display: flex;
+    display: flex;
 }
 
 .col {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .justify-between {
-  justify-content: space-between;
+    justify-content: space-between;
 }
 
 .justify-center {
-  justify-content: center;
+    justify-content: center;
 }
 
 .align-center {
-  align-items: center;
+    align-items: center;
 }
 
 .w-100 {
-  width: 100%;
+    width: 100%;
 }
 
 .align-self-end {
-  align-self: flex-end;
+    align-self: flex-end;
 }
 
 .justify-self-end {
-  justify-self: flex-end;
+    justify-self: flex-end;
 }
 
 .cursor-pointer {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .gap-1 {
-  gap: 1rem
+    gap: 1rem;
 }

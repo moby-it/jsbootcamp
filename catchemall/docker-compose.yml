@@ -1,36 +1,36 @@
 version: '3.9'
 services:
-  ui:
-    build:
-      context: ui
-    env_file:
-      - ui/docker.env
-    ports:
-      - 4200:80
-    depends_on: 
-      - web-api
-  web-api:
-    build:
-      context: web-api
-    env_file:
-      - web-api/docker.env
-    ports:
-      - 4000:4000
-    depends_on:
-      db:
-        condition: service_healthy
-  db:
-    image: postgres:15.3-bookworm
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=catchemall
-    volumes:
-      - ./ps-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    ports:
-      - '5432:5432'
+    ui:
+        build:
+            context: ui
+        env_file:
+            - ui/docker.env
+        ports:
+            - 4200:80
+        depends_on:
+            - web-api
+    web-api:
+        build:
+            context: web-api
+        env_file:
+            - web-api/docker.env
+        ports:
+            - 4000:4000
+        depends_on:
+            db:
+                condition: service_healthy
+    db:
+        image: postgres:15.3-bookworm
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=catchemall
+        volumes:
+            - ./ps-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U postgres']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        ports:
+            - '5432:5432'

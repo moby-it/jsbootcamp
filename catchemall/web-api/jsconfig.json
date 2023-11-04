@@ -1,20 +1,13 @@
 {
-  "$schema": "https://json.schemastore.org/jsconfig",
-  "compilerOptions": {
-    "checkJs": true,
-    "module": "NodeNext",
-    "target": "ESNext",
-    "noUnusedLocals": true,
-    "noUncheckedIndexedAccess": true,
-    "moduleResolution": "nodenext"
-  },
-  "include": [
-    "src/**/*",
-    "tests/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "dist"
-  ]
+    "$schema": "https://json.schemastore.org/jsconfig",
+    "compilerOptions": {
+        "checkJs": true,
+        "module": "NodeNext",
+        "target": "ESNext",
+        "noUnusedLocals": true,
+        "noUncheckedIndexedAccess": true,
+        "moduleResolution": "nodenext"
+    },
+    "include": ["src/**/*", "tests/**/*"],
+    "exclude": ["node_modules", "**/node_modules/*", "dist"]
 }
