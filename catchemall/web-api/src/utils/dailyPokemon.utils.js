@@ -29,23 +29,20 @@ export async function createDailyPokemonForUser(userId) {
   if (res.error) throw new Error(res.error);
   if (!res.data) {
     const pokemons = await fetchDailyPokemon();
-    pokemons.forEach(async p => {
+    for (const p of pokemons) {
       let res = await savePokemon(p);
-      res.error ? console.log(p.name, ' not saved') : console.log(p.name, ' saved');
       res = await savePokemonForUser(p.id, userId);
-    });
+    }
   }
 }
 
-async function refreshDailyPokemon() {
+export async function refreshDailyPokemon() {
   const res = await runQuery('truncate daily_pokemon', []);
   if (res.error) {
     console.log('failed to truncate daily_pokemon');
     return;
   }
   await createDailyPokemon();
-  // Schedule tasks to be run on the server.
-
 }
 export function registerRefreshPokemonCron() {
   cron.schedule('* 0 * * *', refreshDailyPokemon, {

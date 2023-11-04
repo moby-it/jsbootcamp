@@ -20,10 +20,10 @@ pokemonRouter.use(validateToken);
 
 pokemonRouter.post("/catch/:id", async (req, res) => {
   const user = res.locals.user;
-  const pokemonId = req.params.id;
-  if (!pokemonId) return res.sendStatus(400);
+  const dailyPokemonId = req.params.id;
+  if (!dailyPokemonId) return res.sendStatus(400);
   const caught = attemptCatch();
-  const response = await catchPokemon(user.id, +pokemonId, caught);
+  const response = await catchPokemon(user.id, +dailyPokemonId, caught);
   if (response.error) return res.status(500).send(response.error);
   return res.send({ caught });
 });

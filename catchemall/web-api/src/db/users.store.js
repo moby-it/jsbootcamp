@@ -22,7 +22,7 @@ export async function saveUser(user) {
     [user.username, user.password, user.salt]);
 
   if (res.error) {
-    if (res.code === "23505") {
+    if (res.error.code === '23505') {
       return { error: "Username already exists", code: 409 };
     }
     return { error: res.error.detail, code: 500 };

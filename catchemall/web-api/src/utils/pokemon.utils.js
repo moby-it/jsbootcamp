@@ -7,7 +7,7 @@ function randomInteger(min, max) {
  * @returns {Promise<import("../routes/pokemon.router.js").Pokemon[]>}
  */
 export async function fetchDailyPokemon() {
-  const numberToFetch = process.env['DAILY_POKEMON_NO'] ? parseInt(process.env['DAILY_POKEMON_NO']) : 5;
+  const numberToFetch = getDailyPokemonNumber();
   const url = 'https://pokeapi.co/api/v2/pokemon';
   const fetchUrls = [];
   for (let i = 0; i < numberToFetch; i++) {
@@ -21,6 +21,10 @@ export async function fetchDailyPokemon() {
       types: pokemon.types.map(type => type.type.name)
     };
   }))));
+}
+
+export function getDailyPokemonNumber() {
+  return process.env['DAILY_POKEMON_NO'] ? parseInt(process.env['DAILY_POKEMON_NO']) : 5;
 }
 
 export function attemptCatch() {
