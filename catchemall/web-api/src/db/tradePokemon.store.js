@@ -27,10 +27,10 @@ export async function saveTrade(initiationUserPokemonId, responderUserPokemonId)
     const res = await runQuery(
         `
   INSERT INTO ${TABLE_NAME} (initiator_user_pokemon_id, responder_user_pokemon_id)
-  VALUES ($1,$2)`,
-        [initiationUserPokemonId, responderUserPokemonId],
+  VALUES ($1,$2) RETURNING ID`,
+        [initiationUserPokemonId, responderUserPokemonId]
     );
-    return res;
+    return { data: res.data.rows[0] };
 }
 
 /**
@@ -44,7 +44,7 @@ export async function changeTradeStatus(tradeId, accepted) {
         `
     UPDATE ${TABLE_NAME} SET accepted=$1 WHERE id=$2;
   `,
-        [accepted, tradeId],
+        [accepted, tradeId]
     );
     if (accepted) {
         res = await runQuery(`call swap_pokemon($1)`, [tradeId]);
@@ -59,7 +59,7 @@ export async function getInitiatedTradesForUserId(userId) {
   INNER JOIN public."user" u ON u.id = upi.user_id
   WHERE u.id = $1 AND accepted IS NULL
 `,
-        [userId],
+        [userId]
     );
     if (res.error) return res.error;
     return { data: res.data.rows };
@@ -71,7 +71,7 @@ export async function getRequestedTradesForUserId(userId) {
   INNER JOIN public."user" u ON u.id = upr.user_id
   WHERE u.id = $1 AND accepted IS NULL
 `,
-        [userId],
+        [userId]
     );
     if (res.error) return res.error;
 

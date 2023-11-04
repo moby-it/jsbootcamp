@@ -23,9 +23,9 @@ export async function fetchDailyPokemon() {
                         imageUrl: pokemon.sprites.front_default,
                         types: pokemon.types.map((type) => type.type.name),
                     };
-                }),
-            ),
-        ),
+                })
+            )
+        )
     );
 }
 
@@ -34,5 +34,6 @@ export function getDailyPokemonNumber() {
 }
 
 export function attemptCatch() {
-    return Math.random() > 0.5;
+    const catchChance = parseFloat(process.env['CATCH_CHANCE']);
+    return Math.random() < catchChance;
 }

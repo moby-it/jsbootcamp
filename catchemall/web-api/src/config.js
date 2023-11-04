@@ -2,9 +2,15 @@ function validateDbConfig() {
     const connectionString = process.env['DB_CONNECTION_STRING'];
     if (!connectionString) throw new Error(`connectionString is not defined`);
 }
-
+function validateCatchChance() {
+    const catchChance = process.env['CATCH_CHANCE'];
+    if (!catchChance) throw new Error(`catchChance is not defined`);
+    if (+catchChance <= 0) throw new Error(`catchChance: ${catchChance}. value cannot be negative or zero.`);
+    if (+catchChance > 1) throw new Error(`catchChance: ${catchChance}. value cannot be greater than 1.`);
+}
 export function validateConfig() {
     validateDbConfig();
+    validateCatchChance();
     const secret = process.env['JWT_SECRET_KEY'];
     if (!secret) throw new Error('no env secret provided. Application shutting down...');
     console.log('config is valid');

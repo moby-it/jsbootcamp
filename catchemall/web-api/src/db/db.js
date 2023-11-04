@@ -33,7 +33,7 @@ export async function createDbPool() {
     }
     pool = new pg.Pool(poolConfig);
     console.log('connecting to database');
-    const client = await pool.connect();
+    const client = await getDbClient();
     console.log('Succesfully connected to database');
     client.release();
 }

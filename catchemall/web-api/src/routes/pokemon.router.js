@@ -64,7 +64,7 @@ pokemonRouter.post('/trade', async (req, res) => {
         console.error(response.error);
         return res.sendStatus(500);
     }
-    return res.sendStatus(201);
+    return res.status(201).send(response.data);
 });
 pokemonRouter.put('/trade', async (req, res) => {
     const { tradeId, accepted } = req.body;
