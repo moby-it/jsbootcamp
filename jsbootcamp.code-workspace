@@ -6,12 +6,20 @@
   ],
   "extensions": {
     "recommendations": [
-      "dbaeumer.vscode-eslint"
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "EditorConfig.EditorConfig"
     ]
   },
   "settings": {
     "yaml.schemas": {
-      "https://json-schema.org/draft/2019-09/schema#":"docker-compose*.yml"
+      "https://json-schema.org/draft/2019-09/schema#": "docker-compose*.yml"
+    },
+    "jestrunner.jestCommand": "export NODE_OPTIONS=--experimental-vm-modules && jest",
+    "jestrunner.debugOptions": {
+      "env": {
+        "NODE_OPTIONS": "--experimental-vm-modules"
+      },
     },
     "eslint.workingDirectories": [
       "./empty-react",
