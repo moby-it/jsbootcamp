@@ -1,29 +1,29 @@
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 1rem;
 }
 .login-form a {
-  color: white;
+    color: white;
 }
 .form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .form-field input {
-  width: 200px;
-  height: 20px;
-  border-radius: 10px;
-  border: 2px solid lightblue;
-  padding: 5px 8px;
+    width: 200px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid lightblue;
+    padding: 5px 8px;
 }
 .form-field label {
-  padding-left: 10px;
+    padding-left: 10px;
 }
 
 .login-btn {
-  align-self: center;
+    align-self: center;
 }

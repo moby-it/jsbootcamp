@@ -1,35 +1,37 @@
-import { runQuery } from "./db.js";
+import { beginTransaction, commitTransaction, runQuery } from './db.js';
 
 const TABLE_NAME = 'user_pokemon';
 
+const pokedexIdQuery = (dailyPokemonId) => `SELECT pokedex_id FROM daily_pokemon WHERE id=${dailyPokemonId}`;
 
 export async function getPokemonCaughtForUser(userId) {
-  const query = `
-  select id, p.pokedex_id,name,image_url,types from ${TABLE_NAME}
-  inner join public.pokemon p on p.pokedex_id = user_pokemon.pokedex_id
-  where user_id = $1`;
-  const res = await runQuery(query, [userId]);
-  if (res.error) return res;
-  return { data: res.data.rows };
+    const query = `
+  SELECT ${TABLE_NAME}.id, p.pokedex_id,name,image_url,types FROM ${TABLE_NAME}
+  INNER JOIN public.pokemon p ON p.pokedex_id = user_pokemon.pokedex_id
+  WHERE user_id=$1`;
+    const res = await runQuery(query, [userId]);
+    if (res.error) return res;
+    return { data: res.data.rows };
 }
 
-export async function catchPokemon(userId, pokemonId, caught) {
-  const canCatchQuery = `select id from daily_pokemon 
-  where pokedex_id = $1 
-    AND user_id = $2 
-    AND caught IS NULL;
+export async function catchPokemon(userId, dailyPokemonId, caught) {
+    const canCatchQuery = `SELECT id FROM daily_pokemon 
+  WHERE id = $1 
+  AND caught IS NULL;
   `;
-  let res = await runQuery(canCatchQuery, [pokemonId, userId]);
-  if (res.error) return res;
-  if (res.data.rows.length) {
-    let query;
-    if (caught) {
-      query = `insert INTO ${TABLE_NAME} (pokedex_id, user_id) VALUES ($1, $2)`;
-      res = await runQuery(query, [pokemonId, userId]);
+    let res = await runQuery(canCatchQuery, [dailyPokemonId]);
+    if (res.error) return res;
+    if (res.data.rows.length) {
+        const client = await beginTransaction();
+        let query;
+        if (caught) {
+            query = `INSERT INTO ${TABLE_NAME} (pokedex_id, user_id) VALUES ((${pokedexIdQuery(dailyPokemonId)}), $1)`;
+            res = await runQuery(query, [userId], client);
+        }
+        query = `UPDATE daily_pokemon SET caught=$1 WHERE id=$2`;
+        res = await runQuery(query, [caught, dailyPokemonId], client);
+        commitTransaction(client);
+        return res;
     }
-    query = `UPDATE daily_pokemon set caught=$1 where pokedex_id=$2 and user_id=$3`;
-    res = await runQuery(query, [caught, pokemonId, userId]);
-    return res;
-  }
-  return { error: "YOU ARE A SCUM OF THE EARTH" };
+    return { error: 'YOU ARE A SCUM OF THE EARTH' };
 }

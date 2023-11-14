@@ -1,36 +1,36 @@
 html,
 body {
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  color: white;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: white;
 }
 
 h1 {
-  font-family: "pokemon";
-  font-size: 4rem;
+    font-family: 'pokemon';
+    font-size: 4rem;
 }
 h2 {
-  /* font-family: "pokemon"; */
-  font-size: 1.75rem;
+    /* font-family: "pokemon"; */
+    font-size: 1.75rem;
 }
 h3 {
-  font-size: 1.25rem;
-  line-height: 25px;
+    font-size: 1.25rem;
+    line-height: 25px;
 }
 
 label {
-  font-size: 1.1rem;
-  font-weight: bold;
-  letter-spacing: 3px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 3px;
 }
 .error {
-  backdrop-filter: blur(1px);
-  font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 8px;
-  color: rgb(237, 54, 54);
-  text-align: center;
+    backdrop-filter: blur(1px);
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: rgb(237, 54, 54);
+    text-align: center;
 }
 @font-face {
-  font-family: pokemon;
-  src: url(../../Pokemon\ Hollow.ttf);
+    font-family: pokemon;
+    src: url(../../Pokemon\ Hollow.ttf);
 }
