@@ -4,10 +4,12 @@
  * @property {string} name
  * @property {Array<string>} types
  * @property {string} imageUrl
+ * @property {number} [userPokemonId]
  */
 /**
  * @typedef {Object} DailyPokemon
- * @property {string} id - Pokemon pokedex id
+ * @property {string} id
+ * @property {string} pokedex_id
  * @property {string} name
  * @property {Array<string>} types
  * @property {string} imageUrl

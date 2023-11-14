@@ -33,5 +33,5 @@ export async function catchPokemon(userId, dailyPokemonId, caught) {
         commitTransaction(client);
         return res;
     }
-    return { error: 'YOU ARE A SCUM OF THE EARTH' };
+    return { error: res.error };
 }
