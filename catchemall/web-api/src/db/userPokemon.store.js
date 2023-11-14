@@ -21,17 +21,15 @@ export async function catchPokemon(userId, dailyPokemonId, caught) {
   `;
     let res = await runQuery(canCatchQuery, [dailyPokemonId]);
     if (res.error) return res;
-    if (res.data.rows.length) {
-        const client = await beginTransaction();
-        let query;
-        if (caught) {
-            query = `INSERT INTO ${TABLE_NAME} (pokedex_id, user_id) VALUES ((${pokedexIdQuery(dailyPokemonId)}), $1)`;
-            res = await runQuery(query, [userId], client);
-        }
-        query = `UPDATE daily_pokemon SET caught=$1 WHERE id=$2`;
-        res = await runQuery(query, [caught, dailyPokemonId], client);
-        commitTransaction(client);
-        return res;
+    if (!res.data.rows.length) return { error: `no uncaught pokemon with id: ${dailyPokemonId} found` };
+    const client = await beginTransaction();
+    let query;
+    if (caught) {
+        query = `INSERT INTO ${TABLE_NAME} (pokedex_id, user_id) VALUES ((${pokedexIdQuery(dailyPokemonId)}), $1)`;
+        await runQuery(query, [userId], client);
     }
-    return { error: 'YOU ARE A SCUM OF THE EARTH' };
+    query = `UPDATE daily_pokemon SET caught=$1 WHERE id=$2`;
+    await runQuery(query, [caught, dailyPokemonId], client);
+    res = await commitTransaction(client);
+    return res;
 }

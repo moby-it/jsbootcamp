@@ -7,6 +7,7 @@ import { TradeModal } from '../components/TradeModal';
 import { transform } from '../utils/transformPokemon';
 import { UserContext } from '../context/userContext';
 import { usePokemonCaughtForUser } from '../hooks/usePokemonCaughtForUser';
+import { useUsers } from '../hooks';
 
 /**
  * @argument {import("../context/pokemonContext").Pokemon[]} pokemonCaught
@@ -30,8 +31,11 @@ export function User() {
     let { id } = useParams();
     const [tradingPokemon, setTradingPokemon] = useState(null);
     const query = usePokemonCaughtForUser(id);
-    const { users, currentUser } = useContext(UserContext);
+    const { currentUser } = useContext(UserContext);
+    const usersQuery = useUsers();
+    const users = usersQuery.data;
     const isCurrentUser = Number(id) === currentUser.id;
+
     useEffect(() => {
         if (isCurrentUser) {
             window.addEventListener('app:trade:accepted', tradeAccepted);
@@ -41,11 +45,15 @@ export function User() {
         };
     }, [isCurrentUser]);
 
+    if (!id) return <h1>Where are you going?</h1>;
+    if (usersQuery.isLoading) return <h1>Loading...</h1>;
+
     function tradeAccepted() {
         query.refetch();
     }
+
     const user = users.find((u) => u.id === +id);
-    if (!id) return <h1>Where are you going?</h1>;
+    
     if (query.isSuccess) {
         return (
             <article className="user-data">

@@ -4,7 +4,7 @@ import { UserContext } from '../context/userContext';
 import { apiUrl } from '../utils/config';
 
 export function useLogin() {
-    const { setIsLoading, setToken } = useContext(UserContext);
+    const { setToken } = useContext(UserContext);
     const mutation = useMutation('login', ({ username, password }) =>
         fetch(`${apiUrl()}/auth/login`, {
             headers: {
@@ -16,11 +16,10 @@ export function useLogin() {
             const response = await r.json();
             if (r.ok) return response;
             throw response;
-        }),
+        })
     );
     useEffect(() => {
         if (mutation.isSuccess) {
-            setIsLoading(true);
             setToken(mutation.data.token);
         }
     }, [mutation.isSuccess]);

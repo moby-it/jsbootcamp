@@ -1,5 +1,5 @@
-import pg from 'pg';
 import { readFileSync, readdirSync } from 'fs';
+import pg from 'pg';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -37,13 +37,19 @@ export async function createDbPool() {
     console.log('Succesfully connected to database');
     client.release();
 }
+
 export async function seedDatabase() {
-    const client = await pool.connect();
+    const tx = await beginTransaction();
     const filenames = readdirSync(__dirname + '/migrations', 'utf-8');
     if (filenames.length <= 0) throw new Error('there no init db file');
     for (const filename of filenames) {
         const query = readFileSync(`${__dirname}/migrations/${filename}`, 'utf-8');
-        await client.query(query);
+        await tx.query(query);
+    }
+    const res = await commitTransaction(tx);
+    if (res.error) {
+        console.error(res.error);
+        throw new Error('failed to seed database');
     }
 }
 
@@ -88,12 +94,15 @@ export async function beginTransaction() {
 /**
  *
  * @param {pg.PoolClient} client
+ * @returns {Promise<Result>}
  */
 export async function commitTransaction(client) {
     try {
-        await client.query('COMMIT');
+        const res = await client.query('COMMIT');
+        return { data: res };
     } catch (e) {
         await client.query('ROLLBACK');
+        return { error: e };
     } finally {
         client.release();
     }

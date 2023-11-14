@@ -1,6 +1,5 @@
-import { CaughtPokemonPokeCard } from '../components/CatchPokemonCard';
+import { CatchPokemonPokeCard } from '../components/CatchPokemonCard';
 import { CaughtList } from '../components/CaughtList';
-import { transform } from '../utils/transformPokemon';
 import { useDailyPokemon } from '../hooks';
 import { useEffect } from 'react';
 
@@ -25,11 +24,24 @@ export function DailyPokemon() {
                     ? []
                     : dailyPokemonQuery.data
                           .map(transform)
-                          .map((pokemon, index) => (
-                              <CaughtPokemonPokeCard key={`${pokemon.id}_${index}_${pokemon.caught}`} {...pokemon} />
-                          ))}
+                          .map((pokemon) => <CatchPokemonPokeCard key={`${pokemon.id}`} pokemon={pokemon} />)}
             </div>
             <CaughtList />
         </>
     );
+}
+/**
+ *
+ * @param {unknown} p
+ * @returns {import('../utils/transformPokemon').DailyPokemon}
+ */
+function transform(p) {
+    return {
+        id: p.id,
+        caught: p.caught,
+        imageUrl: p.image_url,
+        name: p.name,
+        pokedex_id: p.pokedex_id,
+        types: p.types,
+    };
 }

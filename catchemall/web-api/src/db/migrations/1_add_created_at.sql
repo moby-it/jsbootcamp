@@ -1,5 +1,3 @@
-BEGIN;
-
 ALTER TABLE "user"
 ADD column IF NOT EXISTS created_at TIMESTAMP DEFAULT current_timestamp;
 
@@ -14,5 +12,3 @@ ADD column IF NOT EXISTS caught BOOLEAN;
 
 ALTER TABLE "user_pokemon"
 ADD column IF NOT EXISTS created_at TIMESTAMP DEFAULT current_timestamp;
-
-COMMIT;

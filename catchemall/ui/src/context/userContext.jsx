@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
-import { useFetchUsers } from '../hooks';
-import { decodeJwt } from '../utils/auth.helpers';
 import { useQueryClient } from 'react-query';
+import { decodeJwt } from '../utils/auth.helpers';
 
 /**
  * @typedef {Object} User
@@ -30,10 +29,9 @@ export const UserContext = createContext(null);
  *
  * @returns {UserContextValue}
  */
-function useUsers() {
+function useUserConstext() {
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState();
-    const fetchUsersQuery = useFetchUsers();
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [isLoading, setIsLoading] = useState(true);
     const queryClient = useQueryClient();
@@ -49,7 +47,6 @@ function useUsers() {
         const user = decodeJwt(token);
         setCurrentUser(user);
         setIsLoading(false);
-        fetchUsersQuery.refetch().then((users) => setUsers(users.data));
     }, [token]);
 
     function logout() {
@@ -71,6 +68,6 @@ function useUsers() {
 }
 
 export function UserProvider({ children }) {
-    const r = useUsers();
+    const r = useUserConstext();
     return <UserContext.Provider value={r}>{children}</UserContext.Provider>;
 }

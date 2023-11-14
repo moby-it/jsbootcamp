@@ -1,4 +1,3 @@
-BEGIN;
 CREATE TABLE IF NOT EXISTS pokemon_trade (
     id SERIAL PRIMARY KEY,
     initiator_user_pokemon_id INT NOT NULL,
@@ -37,4 +36,3 @@ BEGIN
             AND pokemon_trade.id != pokemon_trade_id;
 END;
 $$;
-COMMIT;
