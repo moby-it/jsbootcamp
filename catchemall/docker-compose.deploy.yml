@@ -1,7 +1,7 @@
 version: '3.9'
 services:
     ui:
-        image: ${REPOSITORY_NAME}/catchemall-ui:latest
+        image: ${REPOSITORY_NAME}/catchemall-ui:${GIT_SHA}
         ports:
             - 9138:80
         deploy:
@@ -19,7 +19,7 @@ services:
                 parallelism: 1
                 order: start-first
     api:
-        image: ${REPOSITORY_NAME}/catchemall-api:latest
+        image: ${REPOSITORY_NAME}/catchemall-api:${GIT_SHA}
         ports:
             - 9139:4000
         configs:
