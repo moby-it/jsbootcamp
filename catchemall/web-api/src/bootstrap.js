@@ -23,10 +23,6 @@ export async function bootstrap() {
 
     await createDailyPokemon();
     registerRefreshPokemonCron();
-    app.get('/', (req, res) => {
-        res.send('Hello World!');
-    });
-
     // Routes
     app.use('/pokemon', pokemonRouter);
     app.use('/auth', authRouter);

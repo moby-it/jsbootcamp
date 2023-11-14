@@ -1,11 +1,13 @@
 import express from 'express';
 
-export const healthRouter = express.Router();
+const router = express.Router();
 
-healthRouter.get('/liveness', (req, res) => {
+router.get('/liveness', (req, res) => {
     try {
         res.send('liveness check passed');
     } catch (e) {
         res.status(500);
     }
 });
+
+export { router as healthRouter };
