@@ -1,6 +1,6 @@
 export * from './useCatchPokemon';
 export * from './useDailyPokemon';
-export * from './useFetchUsers';
+export * from './useUsers';
 export * from './usePendingTrades';
 export * from './usePokemonCaught';
 export * from './useSaveTrade';

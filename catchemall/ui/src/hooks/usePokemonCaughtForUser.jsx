@@ -7,7 +7,7 @@ export function usePokemonCaughtForUser(userId) {
     const query = useQuery(
         ['pokemonCaughtForUser', userId],
         () => fetchWithAuth(`${apiUrl()}/pokemon/caught/${userId}`).then((r) => r.json()),
-        { staleTime: 10000 },
+        { staleTime: 5_000 }
     );
     return query;
 }
