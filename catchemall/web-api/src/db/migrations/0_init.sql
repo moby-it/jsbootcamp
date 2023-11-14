@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE TABLE
   IF NOT EXISTS "user" (
     ID SERIAL PRIMARY KEY,
@@ -33,5 +31,3 @@ CREATE TABLE
     CONSTRAINT fk_pokemon FOREIGN KEY (pokedex_id) REFERENCES "pokemon" (pokedex_id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user" (ID)
   );
-
-COMMIT;
