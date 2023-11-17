@@ -8,6 +8,7 @@ import {
     getInitiatedTradesForUserId,
     getRequestedTradesForUserId,
     saveTrade,
+    checkResponderValidity,
 } from '../db/tradePokemon.store.js';
 import { logAndReturn } from '../utils/log.js';
 /**
@@ -65,8 +66,11 @@ pokemonRouter.post('/trade', async (req, res) => {
     return res.status(201).send(response.data);
 });
 pokemonRouter.put('/trade', async (req, res) => {
+    const user = res.locals.user;
     const { tradeId, accepted } = req.body;
     if (!tradeId || typeof accepted !== 'boolean') return res.sendStatus(400);
+    const isValid = await checkResponderValidity(tradeId, user.id);
+    if (!isValid) return res.sendStatus(400);
     const response = await changeTradeStatus(tradeId, accepted);
     if (response.error) return logAndReturn(res, response.error);
     return res.sendStatus(200);
