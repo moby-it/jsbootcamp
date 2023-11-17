@@ -51,6 +51,16 @@ export async function changeTradeStatus(tradeId, accepted) {
     }
     return res;
 }
+export async function checkResponderValidity(tradeId, userId) {
+    let res = await runQuery(`select responder_user_pokemon_id from ${TABLE_NAME} where id=$1`, [tradeId]);
+    if (res.error) return res.error;
+    const { responder_user_pokemon_id } = res.data.rows[0];
+    res = await runQuery(`select user_id from user_pokemon where ID=$1`, [responder_user_pokemon_id])
+    if (res.error) return res.error;
+    const { user_id } = res.data.rows[0];
+    const isValid = user_id === userId;
+    return isValid
+}
 
 export async function getInitiatedTradesForUserId(userId) {
     const res = await runQuery(
