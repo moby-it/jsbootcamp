@@ -78,12 +78,12 @@ describe('Pokemon Spec', () => {
             await createTrade(
                 { initiatorUserPokemonId: user1Caught[0].id, responderUserPokemonId: user2Caught[0].id },
                 app,
-                users[0]
+                users[0],
             ).then((r) => (tradeId = r.body.id));
             await createTrade(
                 { initiatorUserPokemonId: user1Caught[0].id, responderUserPokemonId: user2Caught[1].id },
                 app,
-                users[0]
+                users[0],
             );
 
             expect(tradeId).toBeDefined();
@@ -96,11 +96,20 @@ describe('Pokemon Spec', () => {
                     expect(response.body.length).toEqual(2);
                 });
         });
+        test('should not be able to accept trade that the same user initiated', async ()=> {
+            
+            await request(app)
+                .put('/pokemon/trade')
+                .auth(users[0].token, { type: 'bearer' })
+                .send({ tradeId, accepted: true })
+                .expect(400);
+        })
+        
         test('accept trade', async () => {
             // ACT
             await request(app)
                 .put('/pokemon/trade')
-                .auth(users[0].token, { type: 'bearer' })
+                .auth(users[1].token, { type: 'bearer' })
                 .send({ tradeId, accepted: true })
                 .expect(200);
             // ASSERT that trades are empty

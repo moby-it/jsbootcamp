@@ -1,5 +1,5 @@
 import express from 'express';
-import { getDailyPokemonForUser, } from '../db/dailyPokemon.store.js';
+import { getDailyPokemonForUser } from '../db/dailyPokemon.store.js';
 import { catchPokemon, getPokemonCaughtForUser } from '../db/userPokemon.store.js';
 import { validateToken } from '../middleware/auth.middleware.js';
 import { attemptCatch } from '../utils/pokemon.utils.js';
@@ -8,7 +8,7 @@ import {
     getInitiatedTradesForUserId,
     getRequestedTradesForUserId,
     saveTrade,
-    checkResponderValidity
+    checkResponderValidity,
 } from '../db/tradePokemon.store.js';
 import { logAndReturn } from '../utils/log.js';
 /**
@@ -69,8 +69,8 @@ pokemonRouter.put('/trade', async (req, res) => {
     const user = res.locals.user;
     const { tradeId, accepted } = req.body;
     if (!tradeId || typeof accepted !== 'boolean') return res.sendStatus(400);
-    const isValid = checkResponderValidity(tradeId, user.id);
-    if (!isValid) return res.sendStatus(401);
+    const isValid = await checkResponderValidity(tradeId, user.id);
+    if (!isValid) return res.sendStatus(400);
     const response = await changeTradeStatus(tradeId, accepted);
     if (response.error) return logAndReturn(res, response.error);
     return res.sendStatus(200);

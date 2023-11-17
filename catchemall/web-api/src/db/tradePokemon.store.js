@@ -28,7 +28,7 @@ export async function saveTrade(initiationUserPokemonId, responderUserPokemonId)
         `
   INSERT INTO ${TABLE_NAME} (initiator_user_pokemon_id, responder_user_pokemon_id)
   VALUES ($1,$2) RETURNING ID`,
-        [initiationUserPokemonId, responderUserPokemonId]
+        [initiationUserPokemonId, responderUserPokemonId],
     );
     return { data: res.data.rows[0] };
 }
@@ -44,7 +44,7 @@ export async function changeTradeStatus(tradeId, accepted) {
         `
     UPDATE ${TABLE_NAME} SET accepted=$1 WHERE id=$2;
   `,
-        [accepted, tradeId]
+        [accepted, tradeId],
     );
     if (accepted) {
         res = await runQuery(`call swap_pokemon($1)`, [tradeId]);
@@ -52,14 +52,14 @@ export async function changeTradeStatus(tradeId, accepted) {
     return res;
 }
 export async function checkResponderValidity(tradeId, userId) {
-    let res = await runQuery(`select responder_user_pokemon_id from ${TABLE_NAME} where id=$1`, [tradeId]);
+    let res = await runQuery(`SELECT responder_user_pokemon_id FROM ${TABLE_NAME} WHERE id=$1`, [tradeId]);
     if (res.error) return res.error;
     const { responder_user_pokemon_id } = res.data.rows[0];
-    res = await runQuery(`select user_id from user_pokemon where ID=$1`, [responder_user_pokemon_id])
+    res = await runQuery(`SELECT user_id from user_pokemon WHERE ID=$1`, [responder_user_pokemon_id]);
     if (res.error) return res.error;
     const { user_id } = res.data.rows[0];
     const isValid = user_id === userId;
-    return isValid
+    return isValid;
 }
 
 export async function getInitiatedTradesForUserId(userId) {
@@ -69,7 +69,7 @@ export async function getInitiatedTradesForUserId(userId) {
   INNER JOIN public."user" u ON u.id = upi.user_id
   WHERE u.id = $1 AND accepted IS NULL
 `,
-        [userId]
+        [userId],
     );
     if (res.error) return res.error;
     return { data: res.data.rows };
@@ -81,7 +81,7 @@ export async function getRequestedTradesForUserId(userId) {
   INNER JOIN public."user" u ON u.id = upr.user_id
   WHERE u.id = $1 AND accepted IS NULL
 `,
-        [userId]
+        [userId],
     );
     if (res.error) return res.error;
 
