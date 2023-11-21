@@ -18,6 +18,13 @@ jobs:
       - name: Test api
         working-directory: ./catchemall/web-api
         run: ./test.sh
+  test-ui:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test api
+        working-directory: ./catchemall/ui
+        run: ./test.sh
   build-push-api:
     needs: test-api
     runs-on: ubuntu-22.04
@@ -38,6 +45,7 @@ jobs:
           file: ./catchemall/web-api/Dockerfile
   build-push-ui:
     runs-on: ubuntu-22.04
+    needs: test-ui
     steps:
       - uses: actions/checkout@v3
       - name: Log in to registry

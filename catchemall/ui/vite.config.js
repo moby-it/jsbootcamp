@@ -7,7 +7,7 @@ export default defineConfig({
     test: {
         environment: 'jsdom',
         setupFiles: ['./tests/setup.js'],
-        testNamePattern: './src/*.spec.{jsx|js}',
+        open: false,
         globals: true,
     },
 });
