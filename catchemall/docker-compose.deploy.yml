@@ -23,7 +23,7 @@ services:
         ports:
             - 9139:4000
         configs:
-            - source: catchemall-api-v3.conf
+            - source: catchemall-api-v4.conf
               target: app/.env
         deploy:
             rollback_config:
@@ -40,5 +40,5 @@ services:
                 parallelism: 1
                 order: start-first
 configs:
-    catchemall-api-v3.conf:
+    catchemall-api-v4.conf:
         external: true

@@ -23,6 +23,7 @@ export async function createDbPool() {
     const connectionString = process.env['DB_CONNECTION_STRING'];
     const poolConfig = {
         connectionString,
+        connectionTimeoutMillis: 2000,
     };
     const env = process.env['ENV'] || 'DEV';
     console.log('ENV IS', env);
