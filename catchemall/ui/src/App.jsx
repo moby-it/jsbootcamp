@@ -72,7 +72,7 @@ function ProtectedRoute({ children }) {
     if (isLoading) return <span>Loading...</span>;
     if (!currentUser) return <Navigate to="/login" replace />;
     return (
-        <>
+        <>  
             <Header />
             {children}
         </>

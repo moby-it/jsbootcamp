@@ -60,4 +60,4 @@ jobs:
       - name: deploy ui
         run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} --remote-only catchemall/ui
       - name: deploy webapi
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} --remote-only catchemall/api
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} --remote-only catchemall/web-api
