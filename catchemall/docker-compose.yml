@@ -3,8 +3,8 @@ services:
     ui:
         build:
             context: ui
-        env_file:
-            - ui/docker.env
+            args:
+                - MODE=docker
         ports:
             - 4200:80
         depends_on:
@@ -13,7 +13,7 @@ services:
         build:
             context: web-api
         env_file:
-            - web-api/docker.env
+            - web-api/.env.docker
         ports:
             - 4000:4000
         depends_on:
