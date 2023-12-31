@@ -65,7 +65,8 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.CONTAINER_USERNAME }}
           password: ${{ secrets.CONTAINER_PASSWORD }}
+      - run: docker pull ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }}
       - name: deploy ui
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} --local-only catchemall/ui
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} catchemall/ui
       - name: deploy webapi
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} --local-only catchemall/web-api
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} catchemall/web-api
