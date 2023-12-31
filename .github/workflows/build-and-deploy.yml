@@ -66,6 +66,6 @@ jobs:
           username: ${{ secrets.CONTAINER_USERNAME }}
           password: ${{ secrets.CONTAINER_PASSWORD }}
       - name: deploy ui
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} catchemall/ui
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} --local-only catchemall/ui
       - name: deploy webapi
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} catchemall/web-api
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} --local-only catchemall/web-api
