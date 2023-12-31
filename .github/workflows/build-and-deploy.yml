@@ -6,9 +6,10 @@ name: Deploy Stack
 on:
   push:
     branches:
-      - "main"
+      - "flyio"
   workflow_dispatch:
-
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 jobs:
   test-api:
     runs-on: ubuntu-22.04
@@ -43,9 +44,6 @@ jobs:
         with:
           username: ${{ secrets.CONTAINER_USERNAME }}
           password: ${{ secrets.CONTAINER_PASSWORD }}
-      - name: 'Create env file'
-        run: |
-          echo "${{ secrets.UI_ENV }}" > catchemall/ui/.env
       - name: UI - Build and Push
         uses: docker/build-push-action@v3
         with:
@@ -58,21 +56,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - name: Replace variables in deploy file
-        run: |
-          sed -i "s/\${REPOSITORY_NAME}/${{ secrets.REPOSITORY_NAME }}/g" catchemall/docker-compose.deploy.yml
-          sed -i "s/\${GIT_SHA}/${{ github.sha }}/g" catchemall/docker-compose.deploy.yml
-      - name: Deploy Stack
-        uses: kitconcept/docker-stack-deploy@v1.2.0
-        with:
-          remote_host: ${{ secrets.HOST }}
-          remote_user: ${{ secrets.USERNAME }}
-          remote_private_key: ${{ secrets.KEY }}
-          registry: "docker.io"
-          deploy_timeout: 300
-          username: ${{ secrets.CONTAINER_USERNAME }}
-          password: ${{ secrets.CONTAINER_PASSWORD }}
-          stack_file: "catchemall/docker-compose.deploy.yml"
-          stack_name: "catchemall"
-          remote_port: ${{ secrets.PORT }}
-          debug: 1
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: deploy ui
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} --remote-only catchemall/ui
+      - name: deploy webapi
+        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} --remote-only catchemall/web-api
