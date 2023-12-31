@@ -69,6 +69,12 @@ jobs:
           docker pull ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }}
           docker pull ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }}
       - name: deploy ui
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} --local-only catchemall/ui
+        run: |
+          flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-ui:${{ github.sha }} \
+            --local-only catchemall/ui \
+            --image-label ${{ github.ref_name }}
       - name: deploy webapi
-        run: flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} --local-only catchemall/web-api
+        run: | 
+          flyctl deploy --image ${{ secrets.REPOSITORY_NAME }}/catchemall-api:${{ github.sha }} \
+             --local-only catchemall/web-api \
+             --image-label ${{ github.ref_name }}
