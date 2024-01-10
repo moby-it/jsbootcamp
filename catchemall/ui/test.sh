@@ -1,1 +1,1 @@
-npm run test:ui
+npm run run:test:ui
