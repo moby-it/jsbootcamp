@@ -5,9 +5,9 @@ Catchemall is a simple pokeon app that we will implement for practice purposes. 
 -   [x] Create a User and Login
 -   [x] Catch some Pokemon that rotate daily.
 -   [x] Have the ability to browse through my caught Pokemon.
--   [ ] Have the ability to search for Users.
--   [ ] Have the ability to see other users' Pokemon.
--   [ ] Have the ability to trade Pokemon.
+-   [x] Have the ability to search for Users.
+-   [x] Have the ability to see other users' Pokemon.
+-   [x] Have the ability to trade Pokemon.
 
 ## App Screen
 
